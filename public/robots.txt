@@ -1,0 +1,80 @@
+# LinkedIn Jobs Search - AI-Friendly Robots.txt
+# Optimized for Generative Engine Optimization (GEO)
+
+# Allow all crawlers by default
+User-agent: *
+Allow: /
+
+# Specific AI crawler configurations
+# OpenAI GPT crawlers
+User-agent: GPTBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: ChatGPT-User  
+Allow: /
+Crawl-delay: 1
+
+# Anthropic Claude crawler
+User-agent: Claude-Web
+Allow: /
+Crawl-delay: 1
+
+# Google AI services
+User-agent: GoogleOther
+Allow: /
+Crawl-delay: 1
+
+User-agent: Google-Extended
+Allow: /
+Crawl-delay: 1
+
+# Microsoft/Bing AI
+User-agent: BingPreview
+Allow: /
+Crawl-delay: 1
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+Crawl-delay: 2
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+Crawl-delay: 1
+
+# Additional AI crawlers
+User-agent: anthropic-ai
+Allow: /
+Crawl-delay: 1
+
+User-agent: ClaudeBot
+Allow: /
+Crawl-delay: 1
+
+# High-value pages for AI indexing
+# Main application interface
+Allow: /
+Allow: /index.html
+
+# API documentation (if added)
+Allow: /api*
+
+# Static assets
+Allow: /linkedin-jobs-search.svg
+Allow: /chan_logo.svg
+
+# Recommended crawl priorities
+# Priority pages for AI understanding
+# /          - Main job search interface
+# /api*      - API endpoints for developers
+
+# Performance optimization
+Crawl-delay: 1
+
+# Sitemap location (to be created)
+Sitemap: https://linkedin-jobs-search.vercel.app/sitemap.xml
+
+# Last updated: 2025-01-11
+# Purpose: Optimize for AI crawler access and job search functionality discovery
