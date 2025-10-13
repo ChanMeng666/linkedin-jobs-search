@@ -1,0 +1,97 @@
+/**
+ * Component Styles
+ * Styles for reusable UI components
+ */
+
+/* Job Card Component */
+.job-card {
+    transition: all 0.3s ease;
+}
+
+.job-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Footer Component */
+footer {
+    transition: all 0.3s ease;
+}
+
+footer:hover {
+    background-color: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(8px);
+}
+
+footer img {
+    transition: all 0.3s ease;
+}
+
+footer img:hover {
+    transform: scale(1.1);
+}
+
+footer a {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+footer a:hover {
+    transform: translateY(-1px);
+}
+
+footer a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+footer a:hover::after {
+    transform: scaleX(1);
+}
+
+/* CTA Link special effects */
+footer a[href*="subject"] {
+    background: linear-gradient(135deg, transparent 0%, rgba(59, 130, 246, 0.1) 100%);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+}
+
+footer a[href*="subject"]:hover {
+    border-color: rgba(59, 130, 246, 0.3);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.2) 100%);
+}
+
+/* Heart animation in footer */
+footer .heart {
+    display: inline-block;
+    transform-origin: center;
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Search form container */
+.search-form-container {
+    transition: all 0.3s ease-in-out;
+}
+
+/* API Documentation code blocks */
+#apiDocsContent code {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+#apiDocsContent pre {
+    line-height: 1.6;
+}
