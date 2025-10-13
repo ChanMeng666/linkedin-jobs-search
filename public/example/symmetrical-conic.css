@@ -1,0 +1,61 @@
+/* style.css (Final Conic Gradient Version) */
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #000; /* A black background to ensure no edge gaps */
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* Top half: Glow effect */
+.top-half {
+    height: 50vh;
+    background: conic-gradient(
+        /* * 'from 270deg': Sets the gradient starting point (0 degrees) to the top.
+         * 'at 50% 100%': Places the gradient "apex" at the bottom center of this element.
+         */
+        from 270deg at 50% 100%,
+
+        /* * Starting from the apex (now 270deg), smoothly transitioning to both sides (180deg and 360deg).
+         * We define a gradient from bright cyan (#60DFFF) to white and back to bright cyan.
+         * This creates a fan-shaped glow radiating upward and outward from the bottom center.
+         */
+        #60DFFF,
+        white,
+        #60DFFF
+    );
+}
+
+/* Bottom half: Mirror glow effect */
+.bottom-half {
+    height: 50vh;
+    position: relative; /* For positioning the text content */
+    background: conic-gradient(
+        /* * 'from 270deg': Maintains the same starting angle as the top half (top direction).
+         * 'at 50% 0%': Places the gradient "apex" at the top center of this element, creating a true vertical mirror.
+         */
+        from 270deg at 50% 0%,
+
+        /* * This is the true mirror effect of the top half.
+         * Uses the same bright cyan (#60DFFF) to white and back to bright cyan gradient.
+         * Uses the same gradient angle, only changing the center position, creating a fan-shaped glow radiating downward from the top center,
+         * forming perfect vertical mirror symmetry with the glow above.
+         */
+        #60DFFF,
+        white,
+        #60DFFF
+    );
+}
+
+/* Text styles */
+.text-content {
+    position: absolute;
+    bottom: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.6;
+    letter-spacing: 1px;
+}

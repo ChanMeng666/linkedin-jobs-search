@@ -1,0 +1,45 @@
+/**
+ * Search Page Styles
+ * Enhanced search interface with glassmorphism
+ */
+
+.search-page-container {
+  min-height: calc(100vh - 73px);
+  padding-bottom: 2rem;
+}
+
+/* Job Card Enhancements */
+.job-card {
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  border: 1px solid var(--slate-200);
+  transition: all var(--transition-base) var(--transition-ease);
+}
+
+.job-card:hover {
+  border-color: transparent;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* Add subtle glow on hover */
+.job-card:hover::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, rgba(96, 223, 255, 0.3), rgba(255, 0, 179, 0.3));
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.5;
+}
+
+/* Search params display */
+#searchParams {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--slate-200);
+}
+
+#searchParams:empty {
+  display: none;
+}

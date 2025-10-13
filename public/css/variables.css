@@ -1,0 +1,167 @@
+/**
+ * Design System Variables
+ * Global CSS variables for consistent styling across all pages
+ */
+
+:root {
+  /* ===== Conic Gradients ===== */
+  /* Hero background - Symmetrical conic gradient (cyan glow) */
+  --gradient-hero-top: conic-gradient(from 270deg at 50% 100%, #60DFFF, white, #60DFFF);
+  --gradient-hero-bottom: conic-gradient(from 270deg at 50% 0%, #60DFFF, white, #60DFFF);
+
+  /* Accent gradient - Asymmetrical conic (colorful beam) */
+  --gradient-accent: conic-gradient(
+    at 50% 35%,
+    #0d00e9 0deg,
+    #0d00e9 140deg,
+    #000000 225deg,
+    #ffff00 270deg,
+    #ff00b3 315deg,
+    #0d00e9 360deg
+  );
+
+  /* Button gradient - Pink to Yellow */
+  --gradient-cta: linear-gradient(135deg, #ff00b3, #ffff00);
+  --gradient-cta-hover: linear-gradient(135deg, #e0009f, #f0f000);
+
+  /* Card gradient - Subtle blue */
+  --gradient-card: linear-gradient(135deg, rgba(96, 223, 255, 0.1), rgba(13, 0, 233, 0.1));
+
+  /* ===== Primary Colors ===== */
+  --primary-blue: #0d00e9;
+  --primary-blue-dark: #0a00b8;
+  --primary-blue-light: #3d2dff;
+
+  --cyan-glow: #60DFFF;
+  --cyan-glow-light: #8fecff;
+  --cyan-glow-dark: #2fc9ff;
+
+  /* ===== Accent Colors ===== */
+  --yellow-beam: #ffff00;
+  --yellow-beam-soft: #fff44f;
+
+  --pink-beam: #ff00b3;
+  --pink-beam-soft: #ff4dd0;
+
+  /* ===== Neutral Colors ===== */
+  --white: #ffffff;
+  --black: #000000;
+
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+
+  /* ===== Glass Effect ===== */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-bg-strong: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-border-strong: rgba(255, 255, 255, 0.3);
+  --glass-blur: blur(10px);
+  --glass-blur-strong: blur(20px);
+
+  /* Dark glass for dark backgrounds */
+  --glass-bg-dark: rgba(0, 0, 0, 0.1);
+  --glass-border-dark: rgba(0, 0, 0, 0.2);
+
+  /* ===== Shadows ===== */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* Glow shadows */
+  --shadow-glow-cyan: 0 0 20px rgba(96, 223, 255, 0.5);
+  --shadow-glow-pink: 0 0 20px rgba(255, 0, 179, 0.5);
+  --shadow-glow-yellow: 0 0 20px rgba(255, 255, 0, 0.5);
+
+  /* ===== Spacing ===== */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-2xl: 3rem;     /* 48px */
+  --spacing-3xl: 4rem;     /* 64px */
+  --spacing-4xl: 6rem;     /* 96px */
+
+  /* ===== Border Radius ===== */
+  --radius-sm: 0.375rem;   /* 6px */
+  --radius-md: 0.5rem;     /* 8px */
+  --radius-lg: 0.75rem;    /* 12px */
+  --radius-xl: 1rem;       /* 16px */
+  --radius-2xl: 1.5rem;    /* 24px */
+  --radius-full: 9999px;
+
+  /* ===== Typography ===== */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+
+  /* Font sizes */
+  --text-xs: 0.75rem;      /* 12px */
+  --text-sm: 0.875rem;     /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg: 1.125rem;     /* 18px */
+  --text-xl: 1.25rem;      /* 20px */
+  --text-2xl: 1.5rem;      /* 24px */
+  --text-3xl: 1.875rem;    /* 30px */
+  --text-4xl: 2.25rem;     /* 36px */
+  --text-5xl: 3rem;        /* 48px */
+  --text-6xl: 3.75rem;     /* 60px */
+
+  /* Font weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* Line heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  /* ===== Transitions ===== */
+  --transition-fast: 150ms;
+  --transition-base: 300ms;
+  --transition-slow: 500ms;
+  --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --transition-ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+  /* ===== Z-Index ===== */
+  --z-base: 1;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-popover: 60;
+  --z-tooltip: 70;
+
+  /* ===== Breakpoints (for reference) ===== */
+  /* sm: 640px */
+  /* md: 768px */
+  /* lg: 1024px */
+  /* xl: 1280px */
+  /* 2xl: 1536px */
+}
+
+/* Dark mode variables (optional, for future use) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --slate-50: #0f172a;
+    --slate-100: #1e293b;
+    --slate-200: #334155;
+    --slate-800: #f1f5f9;
+    --slate-900: #f8fafc;
+  }
+}

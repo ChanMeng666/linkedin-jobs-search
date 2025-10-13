@@ -1,0 +1,388 @@
+/**
+ * Gradient Effects
+ * Conic gradients and special visual effects inspired by example files
+ */
+
+/* ===== Hero Background (Symmetrical Conic) ===== */
+.hero-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero-background-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: conic-gradient(
+    from 270deg at 50% 100%,
+    #60DFFF,
+    white,
+    #60DFFF
+  );
+}
+
+.hero-background-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: conic-gradient(
+    from 270deg at 50% 0%,
+    #60DFFF,
+    white,
+    #60DFFF
+  );
+}
+
+/* ===== Accent Gradient Background ===== */
+.accent-gradient-background {
+  position: relative;
+  background: conic-gradient(
+    at 50% 35%,
+    #0d00e9 0deg,
+    #0d00e9 140deg,
+    #000000 225deg,
+    #ffff00 270deg,
+    #ff00b3 315deg,
+    #0d00e9 360deg
+  );
+}
+
+/* ===== Glass Card ===== */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-base) var(--transition-ease);
+}
+
+.glass-card:hover {
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-border-strong);
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-2px);
+}
+
+/* Strong glass (more opaque) */
+.glass-card-strong {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Dark glass (for light backgrounds) */
+.glass-card-dark {
+  background: var(--glass-bg-dark);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border-dark);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ===== CTA Button with Rotating Glow ===== */
+.btn-cta-glow {
+  position: relative;
+  background: var(--gradient-cta);
+  color: var(--white);
+  padding: 1rem 2rem;
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-semibold);
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 1;
+  transition: all var(--transition-base) var(--transition-ease);
+}
+
+.btn-cta-glow::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    #ff00b3,
+    #ffff00,
+    #60DFFF,
+    #ff00b3
+  );
+  border-radius: inherit;
+  z-index: -1;
+  animation: rotate-glow 4s linear infinite;
+  opacity: 0;
+  transition: opacity var(--transition-base) var(--transition-ease);
+}
+
+.btn-cta-glow:hover::before {
+  opacity: 1;
+}
+
+.btn-cta-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-pink);
+}
+
+@keyframes rotate-glow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== Gradient Border Card ===== */
+.gradient-border-card {
+  position: relative;
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  z-index: 1;
+}
+
+.gradient-border-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: var(--gradient-accent);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity var(--transition-base) var(--transition-ease);
+}
+
+.gradient-border-card:hover::before {
+  opacity: 1;
+}
+
+/* ===== Glow Effects ===== */
+.glow-cyan {
+  box-shadow: var(--shadow-glow-cyan);
+}
+
+.glow-pink {
+  box-shadow: var(--shadow-glow-pink);
+}
+
+.glow-yellow {
+  box-shadow: var(--shadow-glow-yellow);
+}
+
+/* Hover glow effects */
+.hover-glow-cyan:hover {
+  box-shadow: var(--shadow-glow-cyan);
+  transition: box-shadow var(--transition-base) var(--transition-ease);
+}
+
+.hover-glow-pink:hover {
+  box-shadow: var(--shadow-glow-pink);
+  transition: box-shadow var(--transition-base) var(--transition-ease);
+}
+
+.hover-glow-yellow:hover {
+  box-shadow: var(--shadow-glow-yellow);
+  transition: box-shadow var(--transition-base) var(--transition-ease);
+}
+
+/* ===== Gradient Text ===== */
+.gradient-text {
+  background: var(--gradient-cta);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-cyan {
+  background: linear-gradient(135deg, var(--cyan-glow), var(--primary-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== Stats Card with Gradient Corner ===== */
+.stats-card {
+  position: relative;
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: all var(--transition-base) var(--transition-ease);
+}
+
+.stats-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: conic-gradient(
+    from 180deg at 100% 0%,
+    var(--cyan-glow),
+    transparent
+  );
+  opacity: 0.3;
+  transition: opacity var(--transition-base) var(--transition-ease);
+}
+
+.stats-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stats-card:hover::before {
+  opacity: 0.6;
+}
+
+/* ===== Feature Card with Subtle Gradient ===== */
+.feature-card {
+  position: relative;
+  background: var(--white);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base) var(--transition-ease);
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-card);
+  opacity: 0;
+  transition: opacity var(--transition-base) var(--transition-ease);
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+}
+
+.feature-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* ===== Pricing Card Highlight ===== */
+.pricing-card-highlight {
+  position: relative;
+  background: var(--white);
+  border-radius: var(--radius-2xl);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-xl);
+  z-index: 1;
+}
+
+.pricing-card-highlight::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  background: linear-gradient(135deg, #ff00b3, #ffff00, #60DFFF);
+  border-radius: inherit;
+  z-index: -1;
+  animation: rotate-slow 8s linear infinite;
+}
+
+@keyframes rotate-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== Loading Spinner with Conic Gradient ===== */
+.loader-conic {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    var(--cyan-glow) 90deg,
+    transparent 180deg
+  );
+  animation: rotate-fast 1s linear infinite;
+}
+
+@keyframes rotate-fast {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== Overlay with Gradient ===== */
+.overlay-gradient {
+  position: relative;
+}
+
+.overlay-gradient::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  pointer-events: none;
+}
+
+/* ===== Animated Background ===== */
+.animated-gradient-bg {
+  background: linear-gradient(
+    270deg,
+    #60DFFF,
+    #0d00e9,
+    #ff00b3
+  );
+  background-size: 600% 600%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ===== Pulse Animation ===== */
+.pulse-glow {
+  animation: pulse-animation 2s ease-in-out infinite;
+}
+
+@keyframes pulse-animation {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(96, 223, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(96, 223, 255, 0.8);
+  }
+}
