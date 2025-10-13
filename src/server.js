@@ -152,7 +152,9 @@ app.post('/api/jobs/search', async (req, res) => {
             experienceLevel: req.body.experienceLevel,
             limit: req.body.limit || '10',
             sortBy: req.body.sortBy,
-            page: req.body.page || '0'
+            page: req.body.page || '0',
+            has_verification: req.body.has_verification === true || req.body.has_verification === 'true',
+            under_10_applicants: req.body.under_10_applicants === true || req.body.under_10_applicants === 'true'
         };
 
         // 移除空值

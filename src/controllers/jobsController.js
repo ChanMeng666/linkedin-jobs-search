@@ -36,7 +36,9 @@ const jobsController = {
                 salary,
                 experienceLevel,
                 limit,
-                sortBy
+                sortBy,
+                has_verification,
+                under_10_applicants
             } = req.body;
 
             const queryOptions = {
@@ -48,8 +50,17 @@ const jobsController = {
                 salary,
                 experienceLevel,
                 limit,
-                sortBy
+                sortBy,
+                has_verification: has_verification === true || has_verification === 'true',
+                under_10_applicants: under_10_applicants === true || under_10_applicants === 'true'
             };
+
+            // 移除空值和 false 布尔值
+            Object.keys(queryOptions).forEach(key => {
+                if (!queryOptions[key]) {
+                    delete queryOptions[key];
+                }
+            });
 
             const jobs = await linkedIn.query(queryOptions);
             res.json({

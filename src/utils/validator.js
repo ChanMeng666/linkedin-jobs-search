@@ -13,6 +13,14 @@ const validateSearchParams = (params) => {
         errors.push('Invalid job type');
     }
 
+    if (params.has_verification !== undefined && typeof params.has_verification !== 'boolean' && params.has_verification !== 'true' && params.has_verification !== 'false') {
+        errors.push('Invalid has_verification value (must be boolean)');
+    }
+
+    if (params.under_10_applicants !== undefined && typeof params.under_10_applicants !== 'boolean' && params.under_10_applicants !== 'true' && params.under_10_applicants !== 'false') {
+        errors.push('Invalid under_10_applicants value (must be boolean)');
+    }
+
     return errors;
 };
 
