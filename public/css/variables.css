@@ -41,17 +41,17 @@
   --tracking-normal: 0;
   --tracking-wide: 0.02em;
 
-  /* ===== Primary Colors (Professional Blue) ===== */
+  /* ===== Primary Colors (LinkedIn Brand Blue) ===== */
   --blue-50: #f0f7ff;
-  --blue-100: #e0efff;
-  --blue-200: #baddff;
-  --blue-300: #7cc4ff;
-  --blue-400: #36a9ff;
-  --blue-500: #0066cc;
-  --blue-600: #0052a3;
-  --blue-700: #003d7a;
-  --blue-800: #002952;
-  --blue-900: #001f3f;
+  --blue-100: #e0f0ff;
+  --blue-200: #b8dcff;
+  --blue-300: #7ac2ff;
+  --blue-400: #3aa5f5;
+  --blue-500: #0A66C2;  /* LinkedIn Brand Blue */
+  --blue-600: #0857a1;
+  --blue-700: #064580;
+  --blue-800: #043260;
+  --blue-900: #022140;
 
   /* ===== Neutral Colors (Warm Stone) ===== */
   --stone-50: #fafaf9;
@@ -73,6 +73,13 @@
   --rose-500: #f43f5e;
   --rose-600: #e11d48;
 
+  /* ===== Brand Pink Accent ===== */
+  --pink-50: #fff5fa;
+  --pink-100: #ffebf4;
+  --pink-200: #ffd6ea;
+  --pink-300: #FFA7D7;  /* Brand Pink */
+  --pink-400: #ff8cc7;
+
   /* ===== Semantic Colors ===== */
   --color-primary: var(--blue-500);
   --color-primary-hover: var(--blue-600);
@@ -81,6 +88,9 @@
   --color-success: var(--emerald-500);
   --color-warning: var(--amber-500);
   --color-error: var(--rose-500);
+
+  --color-accent: var(--pink-300);
+  --color-accent-light: var(--pink-50);
 
   --color-text-primary: var(--stone-800);
   --color-text-secondary: var(--stone-600);
@@ -95,10 +105,10 @@
   --color-border-light: var(--stone-100);
 
   /* ===== Gradients (Elegant) ===== */
-  --gradient-hero: linear-gradient(135deg, #f0f7ff 0%, #ffffff 50%, #e0efff 100%);
-  --gradient-cta: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
-  --gradient-cta-hover: linear-gradient(135deg, #0052a3 0%, #003d7a 100%);
-  --gradient-card-hover: linear-gradient(180deg, rgba(0, 102, 204, 0.02) 0%, transparent 100%);
+  --gradient-hero: linear-gradient(135deg, #f0f7ff 0%, #ffffff 50%, #e0f0ff 100%);
+  --gradient-cta: linear-gradient(135deg, #0A66C2 0%, #0857a1 100%);
+  --gradient-cta-hover: linear-gradient(135deg, #0857a1 0%, #064580 100%);
+  --gradient-card-hover: linear-gradient(180deg, rgba(10, 102, 194, 0.02) 0%, transparent 100%);
   --gradient-divider: linear-gradient(90deg, transparent 0%, #e7e5e4 50%, transparent 100%);
   --gradient-section: linear-gradient(180deg, #fafaf9 0%, #ffffff 100%);
 
@@ -110,7 +120,7 @@
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
 
   /* Focus ring */
-  --shadow-focus: 0 0 0 3px rgba(0, 102, 204, 0.15);
+  --shadow-focus: 0 0 0 3px rgba(10, 102, 194, 0.15);
   --shadow-focus-error: 0 0 0 3px rgba(244, 63, 94, 0.15);
 
   /* ===== Spacing ===== */
@@ -156,6 +166,24 @@
   --container-max: 1280px;
   --container-narrow: 800px;
   --header-height: 72px;
+
+  /* ===== Legacy Compatibility Variables ===== */
+  --primary-blue: var(--blue-500);
+  --primary-blue-dark: var(--blue-600);
+  --cyan-glow: var(--blue-400);
+  --pink-beam: var(--pink-300);
+  --yellow-beam: var(--amber-500);
+  --white: #ffffff;
+
+  /* Slate fallbacks (map to stone for consistency) */
+  --slate-100: var(--stone-100);
+  --slate-200: var(--stone-200);
+  --slate-300: var(--stone-300);
+  --slate-500: var(--stone-500);
+  --slate-600: var(--stone-600);
+  --slate-700: var(--stone-700);
+  --slate-800: var(--stone-800);
+  --slate-900: var(--stone-900);
 }
 
 /* Base styles */

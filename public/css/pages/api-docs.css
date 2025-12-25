@@ -44,15 +44,15 @@
 }
 
 .nav-item:hover {
-  background: rgba(96, 223, 255, 0.1);
-  color: var(--primary-blue);
+  background: rgba(10, 102, 194, 0.1);
+  color: var(--color-primary);
   padding-left: 1.25rem;
 }
 
 .nav-item.active {
-  background: linear-gradient(90deg, rgba(96, 223, 255, 0.2), transparent);
-  color: var(--primary-blue);
-  border-left-color: var(--cyan-glow);
+  background: linear-gradient(90deg, rgba(10, 102, 194, 0.2), transparent);
+  color: var(--color-primary);
+  border-left-color: var(--color-primary);
   font-weight: var(--font-semibold);
 }
 

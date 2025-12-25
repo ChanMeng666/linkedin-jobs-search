@@ -221,8 +221,8 @@
 }
 
 .feature-icon.bg-pink {
-  background: #fdf2f8;
-  color: #ec4899;
+  background: var(--pink-50);
+  color: var(--pink-300);
 }
 
 .feature-icon.bg-yellow {

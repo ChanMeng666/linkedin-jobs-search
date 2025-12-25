@@ -51,12 +51,12 @@
 
 /* Featured Card */
 .pricing-card-featured {
-  border-color: var(--primary-blue);
-  background: linear-gradient(135deg, rgba(96, 223, 255, 0.05), rgba(255, 0, 179, 0.05));
+  border-color: var(--color-primary);
+  background: linear-gradient(135deg, rgba(10, 102, 194, 0.05), rgba(255, 167, 215, 0.05));
 }
 
 .pricing-card-featured:hover {
-  box-shadow: var(--shadow-2xl), 0 0 40px rgba(96, 223, 255, 0.3);
+  box-shadow: var(--shadow-2xl), 0 0 40px rgba(10, 102, 194, 0.3);
 }
 
 .featured-badge {
