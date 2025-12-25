@@ -4,6 +4,7 @@
  */
 
 const { APP_CONFIG } = require('../config');
+const logger = require('../utils/logger');
 
 class GEOMonitoring {
     constructor() {
@@ -59,8 +60,8 @@ class GEOMonitoring {
             this.stats.searchRequests++;
         }
 
-        // Log to console (in production, use proper logging service)
-        console.log('GEO Monitoring:', JSON.stringify(logEntry));
+        // Log using centralized logger
+        logger.debug('GEO Monitoring', logEntry);
 
         return logEntry;
     }

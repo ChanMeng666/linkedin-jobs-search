@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(powershell -Command \"Get-ChildItem -Path ''D:\\\\github_repository\\\\linkedin-jobs-search'' -Recurse -Force | Select-Object FullName, PSIsContainer | Sort-Object FullName | ForEach-Object { $path = $_FullName; $indent = \\($path -split ''\\\\'' | Measure-Object\\).Count - 5; $name = Split-Path -Leaf $path; Write-Host \\(\\(''  '' * $indent\\) + \\(if \\($_PSIsContainer\\) { ''[+] '' } else { ''[-] '' }\\) + $name\\) }\")",
+      "Bash(grep:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

@@ -8,13 +8,17 @@ const express = require('express');
 const cors = require('cors');
 const { corsOptions, limiter } = require('./config');
 const { jobsRoutes, geoRoutes, healthRoutes } = require('./routes');
-const { geoMonitoring, errorHandler, notFoundHandler } = require('./middleware');
+const { geoMonitoring, errorHandler, notFoundHandler, securityMiddleware, additionalSecurityHeaders } = require('./middleware');
 const logger = require('./utils/logger');
 
 const app = express();
 
 // Trust proxy (for Vercel and other platforms)
 app.set('trust proxy', 1);
+
+// Security Middleware (helmet and additional headers)
+app.use(securityMiddleware);
+app.use(additionalSecurityHeaders);
 
 // CORS Configuration
 app.use(cors(corsOptions));

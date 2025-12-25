@@ -4,6 +4,7 @@
  */
 
 const { cache } = require('../config');
+const logger = require('../utils/logger');
 
 /**
  * Generate cache key from request
@@ -33,11 +34,11 @@ const cacheMiddleware = (duration = 3600) => {
         const cachedResponse = cache.get(cacheKey);
 
         if (cachedResponse) {
-            console.log(`Cache HIT: ${cacheKey.substring(0, 50)}...`);
+            logger.debug('Cache HIT', { key: cacheKey.substring(0, 50) });
             return res.json(cachedResponse);
         }
 
-        console.log(`Cache MISS: ${cacheKey.substring(0, 50)}...`);
+        logger.debug('Cache MISS', { key: cacheKey.substring(0, 50) });
 
         // Store original res.json function
         const originalJson = res.json.bind(res);
@@ -47,7 +48,7 @@ const cacheMiddleware = (duration = 3600) => {
             // Only cache successful responses
             if (res.statusCode >= 200 && res.statusCode < 300) {
                 cache.set(cacheKey, body, duration);
-                console.log(`Cached response with key: ${cacheKey.substring(0, 50)}...`);
+                logger.debug('Cached response', { key: cacheKey.substring(0, 50) });
             }
             return originalJson(body);
         };
@@ -62,14 +63,14 @@ const cacheMiddleware = (duration = 3600) => {
 const clearCache = (pattern) => {
     if (!pattern) {
         cache.flushAll();
-        console.log('All cache cleared');
+        logger.info('All cache cleared');
         return;
     }
 
     const keys = cache.keys();
     const matchingKeys = keys.filter(key => key.includes(pattern));
     matchingKeys.forEach(key => cache.del(key));
-    console.log(`Cleared ${matchingKeys.length} cache entries matching: ${pattern}`);
+    logger.info(`Cleared ${matchingKeys.length} cache entries`, { pattern });
 };
 
 /**

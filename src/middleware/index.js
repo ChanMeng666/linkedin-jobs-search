@@ -11,8 +11,13 @@ const {
     asyncHandler,
     validationErrorHandler
 } = require('./errorHandler');
+const { securityMiddleware, additionalSecurityHeaders } = require('./security');
 
 module.exports = {
+    // Security
+    securityMiddleware,
+    additionalSecurityHeaders,
+
     // GEO Monitoring
     geoMonitoring,
 

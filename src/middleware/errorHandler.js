@@ -3,6 +3,8 @@
  * Centralized error handling for the application
  */
 
+const logger = require('../utils/logger');
+
 /**
  * 404 Not Found Handler
  */
@@ -20,7 +22,7 @@ const errorHandler = (err, req, res, next) => {
     const message = err.message || 'Internal Server Error';
 
     // Log error details
-    console.error('Error occurred:', {
+    logger.error('Error occurred', {
         status: statusCode,
         message: message,
         stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,

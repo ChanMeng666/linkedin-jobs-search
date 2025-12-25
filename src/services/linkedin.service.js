@@ -5,6 +5,7 @@
 
 const linkedIn = require('linkedin-jobs-api');
 const { APP_CONFIG } = require('../config');
+const logger = require('../utils/logger');
 
 class LinkedInService {
     /**
@@ -26,7 +27,7 @@ class LinkedInService {
                 }
             });
 
-            console.log('LinkedIn API Query:', options);
+            logger.debug('LinkedIn API Query', { options });
 
             // Execute search
             const jobs = await linkedIn.query(options);
@@ -38,7 +39,7 @@ class LinkedInService {
                 searchParams: options
             };
         } catch (error) {
-            console.error('LinkedIn API Error:', error);
+            logger.error('LinkedIn API Error', { error: error.message });
             throw new Error(`LinkedIn API request failed: ${error.message}`);
         }
     }

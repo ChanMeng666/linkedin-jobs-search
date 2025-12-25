@@ -4,7 +4,7 @@
  */
 
 const app = require('./app');
-const { APP_CONFIG } = require('./config');
+const { APP_CONFIG, TIMING } = require('./config');
 const logger = require('./utils/logger');
 
 const PORT = APP_CONFIG.PORT;
@@ -46,11 +46,11 @@ const gracefulShutdown = (signal) => {
         process.exit(0);
     });
 
-    // Force close after 10 seconds
+    // Force close after timeout
     setTimeout(() => {
         logger.error('Could not close connections in time, forcefully shutting down');
         process.exit(1);
-    }, 10000);
+    }, TIMING.GRACEFUL_SHUTDOWN_TIMEOUT);
 };
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));

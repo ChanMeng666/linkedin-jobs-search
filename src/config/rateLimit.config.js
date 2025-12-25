@@ -4,11 +4,11 @@
  */
 
 const rateLimit = require('express-rate-limit');
+const { RATE_LIMITS } = require('./constants');
 
-// Rate limiter: 100 requests per 15-minute window per IP
 const limiterConfig = {
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per windowMs
+    windowMs: RATE_LIMITS.WINDOW_MS,
+    max: RATE_LIMITS.MAX_REQUESTS,
     message: {
         success: false,
         error: 'Too many requests from this IP, please try again later.'

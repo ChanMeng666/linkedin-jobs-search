@@ -4,12 +4,12 @@
  */
 
 const NodeCache = require('node-cache');
+const { TIMING } = require('./constants');
 
-// Cache TTL: 1 hour (3600 seconds)
 const cacheConfig = {
-    stdTTL: 3600,
-    checkperiod: 600, // Check for expired keys every 10 minutes
-    useClones: true,  // Clone objects when getting from cache
+    stdTTL: TIMING.CACHE_TTL,
+    checkperiod: TIMING.CACHE_CHECK_PERIOD,
+    useClones: true,
     deleteOnExpire: true
 };
 
