@@ -27,9 +27,13 @@
     <link rel="canonical" href="https://linkedin-jobs-search.vercel.app/">
     <link rel="icon" type="image/svg+xml" href="/assets/images/linkedin-jobs-search.svg">
 
-    <!-- Tailwind CSS & Fonts -->
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="/css/variables.css">
@@ -44,16 +48,13 @@
 
     <!-- Hero Section -->
     <section class="hero-section">
-        <div class="hero-background">
-            <div class="hero-background-top"></div>
-            <div class="hero-background-bottom"></div>
-        </div>
+        <div class="hero-background"></div>
         <div class="hero-content">
             <div class="hero-badge">
                 <svg class="hero-badge-icon" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                 </svg>
-                <span>100% Free • No LinkedIn Premium Required</span>
+                <span>100% Free &bull; No LinkedIn Premium Required</span>
             </div>
 
             <h1 class="hero-title">
@@ -123,7 +124,7 @@
                         remote options, and more. Find exactly what you're looking for.
                     </p>
                     <a href="search.html" class="feature-link">
-                        Try it now →
+                        Try it now <span>&rarr;</span>
                     </a>
                 </div>
 
@@ -139,7 +140,7 @@
                         All your job hunting in one place.
                     </p>
                     <a href="dashboard.html" class="feature-link">
-                        View dashboard →
+                        View dashboard <span>&rarr;</span>
                     </a>
                 </div>
 
@@ -155,7 +156,7 @@
                         Full documentation and code examples included.
                     </p>
                     <a href="api-docs.html" class="feature-link">
-                        Read docs →
+                        Read docs <span>&rarr;</span>
                     </a>
                 </div>
             </div>
@@ -167,28 +168,44 @@
         <div class="section-container">
             <div class="stats-grid">
                 <div class="stats-card">
-                    <div class="stats-icon">📊</div>
+                    <div class="stats-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
                     <div class="stats-number">10M+</div>
                     <div class="stats-label">API Requests</div>
                     <p class="stats-text">Processed monthly</p>
                 </div>
 
                 <div class="stats-card">
-                    <div class="stats-icon">⚡</div>
+                    <div class="stats-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
                     <div class="stats-number">&lt;200ms</div>
                     <div class="stats-label">Response Time</div>
                     <p class="stats-text">Lightning fast results</p>
                 </div>
 
                 <div class="stats-card">
-                    <div class="stats-icon">🎯</div>
+                    <div class="stats-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
                     <div class="stats-number">99.9%</div>
                     <div class="stats-label">Uptime</div>
                     <p class="stats-text">Reliable service</p>
                 </div>
 
                 <div class="stats-card">
-                    <div class="stats-icon">🔒</div>
+                    <div class="stats-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
                     <div class="stats-number">100%</div>
                     <div class="stats-label">Secure</div>
                     <p class="stats-text">Your data is safe</p>
@@ -199,7 +216,7 @@
 
     <!-- CTA Section -->
     <section class="cta-section">
-        <div class="cta-card glass-card-strong">
+        <div class="cta-card">
             <h2 class="cta-title">Ready to Find Your Dream Job?</h2>
             <p class="cta-description">
                 Join thousands of job seekers who have found their perfect opportunities.

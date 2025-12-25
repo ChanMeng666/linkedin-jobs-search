@@ -7,9 +7,13 @@
     <meta name="description" content="Search LinkedIn jobs with advanced filtering. Filter by salary, experience, location, and more.">
     <link rel="icon" type="image/svg+xml" href="/assets/images/linkedin-jobs-search.svg">
 
-    <!-- Tailwind CSS & Fonts -->
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="/css/variables.css">
@@ -21,7 +25,7 @@
     <link rel="stylesheet" href="/css/responsive.css">
     <link rel="stylesheet" href="/css/pages/search.css">
 </head>
-<body class="bg-slate-50">
+<body class="bg-stone-50">
     <!-- Navigation (loaded dynamically) -->
     <div data-include="navigation"></div>
 
@@ -30,50 +34,46 @@
         <div class="content-container flex gap-6 p-6">
             <!-- Left: Results Display Area -->
             <div class="w-full lg:w-7/12 scrollable-content pr-0 lg:pr-6">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
-                    <div class="flex items-center gap-3">
-                        <div>
-                            <h1 class="text-2xl sm:text-3xl font-bold text-slate-800">Job Search</h1>
-                            <div class="text-sm text-slate-500 mt-1">Find your perfect opportunity</div>
-                        </div>
-                    </div>
+                <div class="search-page-header">
+                    <h1 class="search-page-title">Job Search</h1>
+                    <p class="search-page-subtitle">Find your perfect opportunity</p>
                 </div>
 
                 <!-- Search Results Area -->
                 <div id="searchContent" class="space-y-6">
-                    <div id="searchParams" class="glass-card p-6"></div>
+                    <div id="searchParams" class="p-5"></div>
                     <div id="results" class="space-y-4"></div>
 
                     <!-- Pagination -->
-                    <div id="pagination" class="sticky bottom-6 glass-card-strong p-4">
+                    <div id="pagination" class="sticky bottom-6">
                         <div class="flex justify-between items-center">
-                            <button id="prevPage" class="btn-primary px-6 py-2 rounded-lg text-white font-medium">← Previous</button>
-                            <span class="text-slate-600 font-medium">Page <span id="currentPage" class="text-blue-600">1</span></span>
-                            <button id="nextPage" class="btn-primary px-6 py-2 rounded-lg text-white font-medium">Next →</button>
+                            <button id="prevPage" class="btn-primary px-6 py-2 rounded-lg text-white font-medium">&larr; Previous</button>
+                            <span class="text-stone-600 font-medium">Page <span id="currentPage" class="text-blue-600">1</span></span>
+                            <button id="nextPage" class="btn-primary px-6 py-2 rounded-lg text-white font-medium">Next &rarr;</button>
                         </div>
-                        <div id="searchStats" class="mt-3 text-slate-500 text-center text-sm"></div>
+                        <div id="searchStats" class="mt-3 text-stone-500 text-center text-sm"></div>
                     </div>
                 </div>
             </div>
 
             <!-- Right: Search Form Area -->
             <div class="w-full lg:w-5/12 scrollable-content search-form-container">
-                <form id="searchForm" class="glass-card-strong p-4 sm:p-8 sticky top-0">
-                    <h2 class="text-xl font-bold text-slate-800 mb-6">Search Filters</h2>
-                    <div class="space-y-6">
-                        <div>
-                            <label class="block text-slate-700 font-medium mb-2">Keywords</label>
-                            <input type="text" name="keyword" class="search-input w-full p-3 rounded-lg" placeholder="e.g., Software Developer">
+                <form id="searchForm" class="search-form-card sticky top-0">
+                    <h2 class="search-form-title">Search Filters</h2>
+                    <div class="space-y-5">
+                        <div class="search-form-group">
+                            <label class="search-form-label">Keywords</label>
+                            <input type="text" name="keyword" class="search-input" placeholder="e.g., Software Developer">
                         </div>
 
-                        <div>
-                            <label class="block text-slate-700 font-medium mb-2">Location</label>
-                            <input type="text" name="location" class="search-input w-full p-3 rounded-lg" placeholder="Enter city name">
+                        <div class="search-form-group">
+                            <label class="search-form-label">Location</label>
+                            <input type="text" name="location" class="search-input" placeholder="Enter city name">
                         </div>
 
-                        <div>
-                            <label class="block text-slate-700 font-medium mb-2">Posted Date</label>
-                            <select name="dateSincePosted" class="search-input w-full p-3 rounded-lg">
+                        <div class="search-form-group">
+                            <label class="search-form-label">Posted Date</label>
+                            <select name="dateSincePosted" class="search-input">
                                 <option value="">Any Time</option>
                                 <option value="past month">Past Month</option>
                                 <option value="past week">Past Week</option>
@@ -81,9 +81,9 @@
                             </select>
                         </div>
 
-                        <div>
-                            <label class="block text-slate-700 font-medium mb-2">Job Type</label>
-                            <select name="jobType" class="search-input w-full p-3 rounded-lg">
+                        <div class="search-form-group">
+                            <label class="search-form-label">Job Type</label>
+                            <select name="jobType" class="search-input">
                                 <option value="">Any Type</option>
                                 <option value="full time">Full Time</option>
                                 <option value="part time">Part Time</option>
@@ -94,9 +94,9 @@
                             </select>
                         </div>
 
-                        <div>
-                            <label class="block text-slate-700 font-medium mb-2">Work Location Type</label>
-                            <select name="remoteFilter" class="search-input w-full p-3 rounded-lg">
+                        <div class="search-form-group">
+                            <label class="search-form-label">Work Location Type</label>
+                            <select name="remoteFilter" class="search-input">
                                 <option value="">Any Location Type</option>
                                 <option value="on site">On Site</option>
                                 <option value="remote">Remote</option>
@@ -104,9 +104,9 @@
                             </select>
                         </div>
 
-                        <div>
-                            <label class="block text-slate-700 font-medium mb-2">Minimum Salary</label>
-                            <select name="salary" class="search-input w-full p-3 rounded-lg">
+                        <div class="search-form-group">
+                            <label class="search-form-label">Minimum Salary</label>
+                            <select name="salary" class="search-input">
                                 <option value="">Any Salary</option>
                                 <option value="40000">$40,000+</option>
                                 <option value="60000">$60,000+</option>
@@ -116,9 +116,9 @@
                             </select>
                         </div>
 
-                        <div>
-                            <label class="block text-slate-700 font-medium mb-2">Experience Level</label>
-                            <select name="experienceLevel" class="search-input w-full p-3 rounded-lg">
+                        <div class="search-form-group">
+                            <label class="search-form-label">Experience Level</label>
+                            <select name="experienceLevel" class="search-input">
                                 <option value="">Any Experience</option>
                                 <option value="internship">Internship</option>
                                 <option value="entry level">Entry Level</option>
@@ -129,32 +129,32 @@
                             </select>
                         </div>
 
-                        <div>
-                            <label class="block text-slate-700 font-medium mb-2">Advanced Filters</label>
-                            <div class="space-y-3">
-                                <label class="flex items-center gap-3">
-                                    <input type="checkbox" name="has_verification" value="true" class="w-4 h-4">
-                                    <span class="text-slate-700">Verified Jobs Only</span>
+                        <div class="search-form-group">
+                            <label class="search-form-label">Advanced Filters</label>
+                            <div class="search-form-checkbox-group">
+                                <label class="search-form-checkbox-label">
+                                    <input type="checkbox" name="has_verification" value="true">
+                                    <span>Verified Jobs Only</span>
                                 </label>
-                                <label class="flex items-center gap-3">
-                                    <input type="checkbox" name="under_10_applicants" value="true" class="w-4 h-4">
-                                    <span class="text-slate-700">Less Than 10 Applicants</span>
+                                <label class="search-form-checkbox-label">
+                                    <input type="checkbox" name="under_10_applicants" value="true">
+                                    <span>Less Than 10 Applicants</span>
                                 </label>
                             </div>
                         </div>
 
-                        <div>
-                            <label class="block text-slate-700 font-medium mb-2">Sort By</label>
-                            <select name="sortBy" class="search-input w-full p-3 rounded-lg">
+                        <div class="search-form-group">
+                            <label class="search-form-label">Sort By</label>
+                            <select name="sortBy" class="search-input">
                                 <option value="">Default Order</option>
                                 <option value="recent">Most Recent</option>
                                 <option value="relevant">Most Relevant</option>
                             </select>
                         </div>
 
-                        <div>
-                            <label class="block text-slate-700 font-medium mb-2">Results Per Page</label>
-                            <select name="limit" class="search-input w-full p-3 rounded-lg">
+                        <div class="search-form-group">
+                            <label class="search-form-label">Results Per Page</label>
+                            <select name="limit" class="search-input">
                                 <option value="10">10</option>
                                 <option value="20">20</option>
                                 <option value="50">50</option>
@@ -162,12 +162,12 @@
                             </select>
                         </div>
 
-                        <div>
-                            <label class="block text-slate-700 font-medium mb-2">Page</label>
-                            <input type="text" name="page" class="search-input w-full p-3 rounded-lg" placeholder="0, 1, 2..." value="0">
+                        <div class="search-form-group">
+                            <label class="search-form-label">Page</label>
+                            <input type="text" name="page" class="search-input" placeholder="0, 1, 2..." value="0">
                         </div>
 
-                        <button type="submit" class="btn-primary w-full p-4 rounded-lg text-white font-medium text-lg">
+                        <button type="submit" class="btn-primary w-full p-4 rounded-lg text-white font-semibold text-base">
                             Search Jobs
                         </button>
                     </div>

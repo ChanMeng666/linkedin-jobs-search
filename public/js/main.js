@@ -171,8 +171,8 @@ const App = {
             `);
         } else {
             DOM.setHTML('results', `
-                <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-                    <p class="text-yellow-800">No matching jobs found. Please try adjusting your search criteria.</p>
+                <div class="alert alert-warning">
+                    <p>No matching jobs found. Please try adjusting your search criteria.</p>
                 </div>
             `);
         }
@@ -181,22 +181,20 @@ const App = {
     // Render individual job card
     renderJobCard(job) {
         return `
-            <div class="job-card bg-white p-6 rounded-xl border border-slate-200">
-                <div class="flex items-start justify-between">
-                    <div class="flex-grow">
-                        <h2 class="text-xl font-bold text-slate-800 hover:text-blue-600 transition-colors">
-                            ${Formatters.escapeHTML(job.position)}
-                        </h2>
-                        <h3 class="text-lg text-slate-600 mt-1">${Formatters.escapeHTML(job.company)}</h3>
+            <div class="job-card">
+                <div class="job-card-header">
+                    <div class="job-card-info">
+                        <h2 class="job-card-position">${Formatters.escapeHTML(job.position)}</h2>
+                        <p class="job-card-company">${Formatters.escapeHTML(job.company)}</p>
                     </div>
                     ${job.companyLogo ? `
                         <img src="${job.companyLogo}" alt="${Formatters.escapeHTML(job.company)} logo"
-                             class="w-16 h-16 object-contain rounded-lg bg-white p-2 border border-slate-200">
+                             class="job-card-logo">
                     ` : ''}
                 </div>
-                <div class="mt-4 space-y-2">
-                    <div class="flex items-center gap-2 text-slate-600">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="job-card-meta">
+                    <div class="job-card-meta-item">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -204,34 +202,36 @@ const App = {
                         </svg>
                         <span>${Formatters.escapeHTML(job.location)}</span>
                     </div>
-                    <div class="flex items-center gap-2 text-slate-600">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="job-card-meta-item">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                         <span>${Formatters.escapeHTML(job.agoTime)}</span>
                     </div>
                     ${job.salary ? `
-                        <div class="flex items-center gap-2 text-emerald-600 font-medium">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="job-card-meta-item job-card-salary">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <span>${Formatters.escapeHTML(job.salary)}</span>
                         </div>
                     ` : ''}
-                    <div class="flex items-center gap-2 text-slate-500">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                </div>
+                <div class="job-card-footer">
+                    <div class="job-card-meta-item">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
-                        <span>Posted: ${Formatters.escapeHTML(job.date)}</span>
+                        <span>${Formatters.escapeHTML(job.date)}</span>
                     </div>
-                </div>
-                <div class="mt-6">
-                    <a href="${job.jobUrl}" target="_blank"
-                       class="btn-primary inline-block px-6 py-3 rounded-lg text-white font-medium">
+                    <a href="${job.jobUrl}" target="_blank" class="btn-primary job-card-action">
                         View Details
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
                     </a>
                 </div>
             </div>
@@ -241,8 +241,8 @@ const App = {
     // Display error
     displayError(error) {
         DOM.setHTML('results', `
-            <div class="bg-red-50 border border-red-200 p-4 rounded-lg">
-                <p class="text-red-800">Search request failed. Please try again later.</p>
+            <div class="alert alert-error">
+                <p>Search request failed. Please try again later.</p>
             </div>
         `);
     },

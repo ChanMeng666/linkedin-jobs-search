@@ -1,120 +1,26 @@
 /**
  * Design System Variables
- * Global CSS variables for consistent styling across all pages
+ * Editorial/Magazine Style with Professional Blue Theme
+ * Refined minimalism with intentional typography
  */
 
 :root {
-  /* ===== Conic Gradients ===== */
-  /* Hero background - Symmetrical conic gradient (cyan glow) */
-  --gradient-hero-top: conic-gradient(from 270deg at 50% 100%, #60DFFF, white, #60DFFF);
-  --gradient-hero-bottom: conic-gradient(from 270deg at 50% 0%, #60DFFF, white, #60DFFF);
-
-  /* Accent gradient - Asymmetrical conic (colorful beam) */
-  --gradient-accent: conic-gradient(
-    at 50% 35%,
-    #0d00e9 0deg,
-    #0d00e9 140deg,
-    #000000 225deg,
-    #ffff00 270deg,
-    #ff00b3 315deg,
-    #0d00e9 360deg
-  );
-
-  /* Button gradient - Pink to Yellow */
-  --gradient-cta: linear-gradient(135deg, #ff00b3, #ffff00);
-  --gradient-cta-hover: linear-gradient(135deg, #e0009f, #f0f000);
-
-  /* Card gradient - Subtle blue */
-  --gradient-card: linear-gradient(135deg, rgba(96, 223, 255, 0.1), rgba(13, 0, 233, 0.1));
-
-  /* ===== Primary Colors ===== */
-  --primary-blue: #0d00e9;
-  --primary-blue-dark: #0a00b8;
-  --primary-blue-light: #3d2dff;
-
-  --cyan-glow: #60DFFF;
-  --cyan-glow-light: #8fecff;
-  --cyan-glow-dark: #2fc9ff;
-
-  /* ===== Accent Colors ===== */
-  --yellow-beam: #ffff00;
-  --yellow-beam-soft: #fff44f;
-
-  --pink-beam: #ff00b3;
-  --pink-beam-soft: #ff4dd0;
-
-  /* ===== Neutral Colors ===== */
-  --white: #ffffff;
-  --black: #000000;
-
-  --slate-50: #f8fafc;
-  --slate-100: #f1f5f9;
-  --slate-200: #e2e8f0;
-  --slate-300: #cbd5e1;
-  --slate-400: #94a3b8;
-  --slate-500: #64748b;
-  --slate-600: #475569;
-  --slate-700: #334155;
-  --slate-800: #1e293b;
-  --slate-900: #0f172a;
-
-  /* ===== Glass Effect ===== */
-  --glass-bg: rgba(255, 255, 255, 0.1);
-  --glass-bg-strong: rgba(255, 255, 255, 0.15);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --glass-border-strong: rgba(255, 255, 255, 0.3);
-  --glass-blur: blur(10px);
-  --glass-blur-strong: blur(20px);
-
-  /* Dark glass for dark backgrounds */
-  --glass-bg-dark: rgba(0, 0, 0, 0.1);
-  --glass-border-dark: rgba(0, 0, 0, 0.2);
-
-  /* ===== Shadows ===== */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-
-  /* Glow shadows */
-  --shadow-glow-cyan: 0 0 20px rgba(96, 223, 255, 0.5);
-  --shadow-glow-pink: 0 0 20px rgba(255, 0, 179, 0.5);
-  --shadow-glow-yellow: 0 0 20px rgba(255, 255, 0, 0.5);
-
-  /* ===== Spacing ===== */
-  --spacing-xs: 0.25rem;   /* 4px */
-  --spacing-sm: 0.5rem;    /* 8px */
-  --spacing-md: 1rem;      /* 16px */
-  --spacing-lg: 1.5rem;    /* 24px */
-  --spacing-xl: 2rem;      /* 32px */
-  --spacing-2xl: 3rem;     /* 48px */
-  --spacing-3xl: 4rem;     /* 64px */
-  --spacing-4xl: 6rem;     /* 96px */
-
-  /* ===== Border Radius ===== */
-  --radius-sm: 0.375rem;   /* 6px */
-  --radius-md: 0.5rem;     /* 8px */
-  --radius-lg: 0.75rem;    /* 12px */
-  --radius-xl: 1rem;       /* 16px */
-  --radius-2xl: 1.5rem;    /* 24px */
-  --radius-full: 9999px;
-
   /* ===== Typography ===== */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: 'SF Mono', 'Monaco', 'Menlo', monospace;
 
-  /* Font sizes */
+  /* Font sizes - Editorial scale */
   --text-xs: 0.75rem;      /* 12px */
   --text-sm: 0.875rem;     /* 14px */
   --text-base: 1rem;       /* 16px */
   --text-lg: 1.125rem;     /* 18px */
   --text-xl: 1.25rem;      /* 20px */
   --text-2xl: 1.5rem;      /* 24px */
-  --text-3xl: 1.875rem;    /* 30px */
-  --text-4xl: 2.25rem;     /* 36px */
-  --text-5xl: 3rem;        /* 48px */
-  --text-6xl: 3.75rem;     /* 60px */
+  --text-3xl: 2rem;        /* 32px */
+  --text-4xl: 2.5rem;      /* 40px */
+  --text-5xl: 3.5rem;      /* 56px */
+  --text-6xl: 4.5rem;      /* 72px */
 
   /* Font weights */
   --font-normal: 400;
@@ -124,18 +30,118 @@
 
   /* Line heights */
   --leading-none: 1;
-  --leading-tight: 1.25;
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
   --leading-normal: 1.5;
   --leading-relaxed: 1.625;
   --leading-loose: 2;
 
+  /* Letter spacing */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+
+  /* ===== Primary Colors (Professional Blue) ===== */
+  --blue-50: #f0f7ff;
+  --blue-100: #e0efff;
+  --blue-200: #baddff;
+  --blue-300: #7cc4ff;
+  --blue-400: #36a9ff;
+  --blue-500: #0066cc;
+  --blue-600: #0052a3;
+  --blue-700: #003d7a;
+  --blue-800: #002952;
+  --blue-900: #001f3f;
+
+  /* ===== Neutral Colors (Warm Stone) ===== */
+  --stone-50: #fafaf9;
+  --stone-100: #f5f5f4;
+  --stone-200: #e7e5e4;
+  --stone-300: #d6d3d1;
+  --stone-400: #a8a29e;
+  --stone-500: #78716c;
+  --stone-600: #57534e;
+  --stone-700: #44403c;
+  --stone-800: #292524;
+  --stone-900: #1c1917;
+
+  /* ===== Accent Colors ===== */
+  --emerald-500: #10b981;
+  --emerald-600: #059669;
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+  --rose-500: #f43f5e;
+  --rose-600: #e11d48;
+
+  /* ===== Semantic Colors ===== */
+  --color-primary: var(--blue-500);
+  --color-primary-hover: var(--blue-600);
+  --color-primary-active: var(--blue-700);
+
+  --color-success: var(--emerald-500);
+  --color-warning: var(--amber-500);
+  --color-error: var(--rose-500);
+
+  --color-text-primary: var(--stone-800);
+  --color-text-secondary: var(--stone-600);
+  --color-text-muted: var(--stone-400);
+  --color-text-inverse: #ffffff;
+
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: var(--stone-50);
+  --color-bg-tertiary: var(--stone-100);
+
+  --color-border: var(--stone-200);
+  --color-border-light: var(--stone-100);
+
+  /* ===== Gradients (Elegant) ===== */
+  --gradient-hero: linear-gradient(135deg, #f0f7ff 0%, #ffffff 50%, #e0efff 100%);
+  --gradient-cta: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+  --gradient-cta-hover: linear-gradient(135deg, #0052a3 0%, #003d7a 100%);
+  --gradient-card-hover: linear-gradient(180deg, rgba(0, 102, 204, 0.02) 0%, transparent 100%);
+  --gradient-divider: linear-gradient(90deg, transparent 0%, #e7e5e4 50%, transparent 100%);
+  --gradient-section: linear-gradient(180deg, #fafaf9 0%, #ffffff 100%);
+
+  /* ===== Shadows (Refined) ===== */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+
+  /* Focus ring */
+  --shadow-focus: 0 0 0 3px rgba(0, 102, 204, 0.15);
+  --shadow-focus-error: 0 0 0 3px rgba(244, 63, 94, 0.15);
+
+  /* ===== Spacing ===== */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;    /* 4px */
+  --spacing-2: 0.5rem;     /* 8px */
+  --spacing-3: 0.75rem;    /* 12px */
+  --spacing-4: 1rem;       /* 16px */
+  --spacing-5: 1.25rem;    /* 20px */
+  --spacing-6: 1.5rem;     /* 24px */
+  --spacing-8: 2rem;       /* 32px */
+  --spacing-10: 2.5rem;    /* 40px */
+  --spacing-12: 3rem;      /* 48px */
+  --spacing-16: 4rem;      /* 64px */
+  --spacing-20: 5rem;      /* 80px */
+  --spacing-24: 6rem;      /* 96px */
+
+  /* ===== Border Radius ===== */
+  --radius-sm: 0.25rem;    /* 4px */
+  --radius-md: 0.5rem;     /* 8px */
+  --radius-lg: 0.75rem;    /* 12px */
+  --radius-xl: 1rem;       /* 16px */
+  --radius-2xl: 1.5rem;    /* 24px */
+  --radius-full: 9999px;
+
   /* ===== Transitions ===== */
   --transition-fast: 150ms;
-  --transition-base: 300ms;
-  --transition-slow: 500ms;
-  --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-ease-in: cubic-bezier(0.4, 0, 1, 1);
-  --transition-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --transition-base: 200ms;
+  --transition-slow: 300ms;
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
   /* ===== Z-Index ===== */
   --z-base: 1;
@@ -144,24 +150,38 @@
   --z-fixed: 30;
   --z-modal-backdrop: 40;
   --z-modal: 50;
-  --z-popover: 60;
-  --z-tooltip: 70;
+  --z-tooltip: 60;
 
-  /* ===== Breakpoints (for reference) ===== */
-  /* sm: 640px */
-  /* md: 768px */
-  /* lg: 1024px */
-  /* xl: 1280px */
-  /* 2xl: 1536px */
+  /* ===== Layout ===== */
+  --container-max: 1280px;
+  --container-narrow: 800px;
+  --header-height: 72px;
 }
 
-/* Dark mode variables (optional, for future use) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --slate-50: #0f172a;
-    --slate-100: #1e293b;
-    --slate-200: #334155;
-    --slate-800: #f1f5f9;
-    --slate-900: #f8fafc;
-  }
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings use serif font */
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Selection styling */
+::selection {
+  background-color: var(--blue-100);
+  color: var(--blue-900);
 }
