@@ -1,15 +1,3 @@
 {
-  "version": 2,
-  "installCommand": "npm install",
-  "buildCommand": "npm run vercel-build",
-  "outputDirectory": "public",
-  "functions": {
-    "api/**/*.js": {
-      "includeFiles": "src/**"
-    }
-  },
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.js" },
-    { "source": "/(.*)", "destination": "/$1" }
-  ]
-} 
+  "framework": "nextjs"
+}

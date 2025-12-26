@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* Base styles */
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  @apply antialiased;
+}
+
+.font-serif {
+  font-family: 'Instrument Serif', Georgia, serif;
+}
+
+/* Custom utilities */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Button variants */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold rounded-xl transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-brand-primary text-white hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-stone-800 border-2 border-stone-200 hover:border-stone-300 hover:bg-stone-50;
+  }
+
+  .btn-ghost {
+    @apply text-stone-600 hover:text-stone-900 hover:bg-stone-100;
+  }
+
+  /* Card styles */
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-stone-100;
+  }
+
+  .card-hover {
+    @apply hover:shadow-md hover:-translate-y-1 transition-all duration-200;
+  }
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Gradient backgrounds */
+.gradient-brand {
+  background: linear-gradient(135deg, #0A66C2 0%, #0A66C2 60%, #FFA7D7 100%);
+}
+
+.gradient-hero {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
