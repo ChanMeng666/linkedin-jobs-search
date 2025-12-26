@@ -214,6 +214,72 @@
         </div>
     </section>
 
+    <!-- Sign In Benefits Section (Guests Only) -->
+    <section data-guest-only class="py-16 px-4" style="background: linear-gradient(135deg, #0A66C2 0%, #0A66C2 50%, #FFA7D7 100%);">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                    Create Your Free Account
+                </h2>
+                <p class="text-white/80 text-lg max-w-2xl mx-auto">
+                    Unlock powerful features to supercharge your job search
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div class="bg-white rounded-2xl p-6 text-center shadow-lg">
+                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style="background: rgba(10, 102, 194, 0.1);">
+                        <svg class="w-7 h-7" style="color: #0A66C2;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-stone-800 font-semibold mb-2">Save Jobs</h3>
+                    <p class="text-stone-500 text-sm">Bookmark jobs and track application status</p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 text-center shadow-lg">
+                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style="background: rgba(255, 167, 215, 0.2);">
+                        <svg class="w-7 h-7" style="color: #E91E8C;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-stone-800 font-semibold mb-2">Export Results</h3>
+                    <p class="text-stone-500 text-sm">Download jobs as CSV or Excel files</p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 text-center shadow-lg">
+                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style="background: rgba(10, 102, 194, 0.1);">
+                        <svg class="w-7 h-7" style="color: #0A66C2;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-stone-800 font-semibold mb-2">Analytics</h3>
+                    <p class="text-stone-500 text-sm">View market trends and salary insights</p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 text-center shadow-lg">
+                    <div class="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style="background: rgba(255, 167, 215, 0.2);">
+                        <svg class="w-7 h-7" style="color: #E91E8C;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-stone-800 font-semibold mb-2">Search History</h3>
+                    <p class="text-stone-500 text-sm">Quickly repeat previous searches</p>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="/login.html" class="inline-flex items-center gap-2 px-8 py-4 bg-white text-stone-900 font-semibold rounded-xl hover:bg-stone-100 transition-colors shadow-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                    </svg>
+                    Create Free Account
+                </a>
+                <p class="text-white/70 text-sm mt-4">No credit card required. Sign in with Google or GitHub.</p>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="cta-section">
         <div class="cta-card">
@@ -242,5 +308,6 @@
     <!-- JavaScript -->
     <script src="/js/components/navigation.js"></script>
     <script src="/js/components/includes.js"></script>
+    <script src="/js/auth/auth.js"></script>
 </body>
 </html>

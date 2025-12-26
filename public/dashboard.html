@@ -18,7 +18,19 @@
     <link rel="stylesheet" href="/css/footer.css">
     <link rel="stylesheet" href="/css/pages/dashboard.css">
 </head>
-<body class="bg-slate-50">
+<body class="bg-stone-50">
+    <!-- Auth Loading Overlay -->
+    <div id="authLoadingOverlay" style="position: fixed; inset: 0; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s;">
+        <div class="text-center">
+            <svg class="w-10 h-10 text-stone-400 animate-spin mx-auto mb-4" fill="none" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;">
+                <circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-stone-500">Loading...</p>
+        </div>
+    </div>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
     <!-- Navigation (loaded dynamically) -->
     <div data-include="navigation"></div>
 
@@ -48,9 +60,9 @@
 
                 <div class="stats-card stats-card-yellow">
                     <div class="stats-card-icon">⚡</div>
-                    <div class="stats-card-value" id="apiCalls">0</div>
-                    <div class="stats-card-label">API Calls</div>
-                    <div class="stats-card-trend">250 remaining</div>
+                    <div class="stats-card-value" id="appliedJobs">0</div>
+                    <div class="stats-card-label">Applied</div>
+                    <div class="stats-card-trend">Keep going!</div>
                 </div>
 
                 <div class="stats-card stats-card-blue">
@@ -70,43 +82,9 @@
             </div>
 
             <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content glass-card">
-                        <div class="timeline-time">2 hours ago</div>
-                        <h3 class="timeline-title">Senior Frontend Developer</h3>
-                        <p class="timeline-description">Location: San Francisco • Remote • $120K+</p>
-                        <div class="timeline-actions">
-                            <button class="btn-timeline-primary">View Results</button>
-                            <button class="btn-timeline-secondary">Search Again</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content glass-card">
-                        <div class="timeline-time">Yesterday</div>
-                        <h3 class="timeline-title">Full Stack Engineer</h3>
-                        <p class="timeline-description">Location: New York • Hybrid • $100K+</p>
-                        <div class="timeline-actions">
-                            <button class="btn-timeline-primary">View Results</button>
-                            <button class="btn-timeline-secondary">Search Again</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content glass-card">
-                        <div class="timeline-time">3 days ago</div>
-                        <h3 class="timeline-title">React Developer</h3>
-                        <p class="timeline-description">Location: Austin • Remote • $80K+</p>
-                        <div class="timeline-actions">
-                            <button class="btn-timeline-primary">View Results</button>
-                            <button class="btn-timeline-secondary">Search Again</button>
-                        </div>
-                    </div>
+                <!-- Search history will be loaded dynamically -->
+                <div class="text-center py-8 text-stone-400">
+                    <p>Loading search history...</p>
                 </div>
             </div>
         </section>
@@ -115,68 +93,16 @@
         <section class="section">
             <div class="section-header">
                 <h2 class="section-title">Saved Jobs</h2>
-                <a href="search.html" class="section-link">Browse More →</a>
+                <div class="flex gap-3">
+                    <button id="exportSavedJobs" class="text-sm text-blue-600 hover:text-blue-800">Export Excel</button>
+                    <a href="search.html" class="section-link">Browse More →</a>
+                </div>
             </div>
 
             <div class="jobs-grid">
-                <div class="job-card feature-card">
-                    <div class="job-company-logo">🏢</div>
-                    <h3 class="job-title">Senior Software Engineer</h3>
-                    <p class="job-company">Tech Company Inc.</p>
-                    <div class="job-meta">
-                        <span class="job-meta-item">📍 San Francisco, CA</span>
-                        <span class="job-meta-item">💰 $150K - $180K</span>
-                        <span class="job-meta-item">🏠 Remote</span>
-                    </div>
-                    <div class="job-tags">
-                        <span class="job-tag">React</span>
-                        <span class="job-tag">Node.js</span>
-                        <span class="job-tag">TypeScript</span>
-                    </div>
-                    <div class="job-actions">
-                        <button class="btn-job-primary">View Details</button>
-                        <button class="btn-job-secondary">Remove</button>
-                    </div>
-                </div>
-
-                <div class="job-card feature-card">
-                    <div class="job-company-logo">🚀</div>
-                    <h3 class="job-title">Frontend Developer</h3>
-                    <p class="job-company">Startup XYZ</p>
-                    <div class="job-meta">
-                        <span class="job-meta-item">📍 New York, NY</span>
-                        <span class="job-meta-item">💰 $120K - $150K</span>
-                        <span class="job-meta-item">🏢 Hybrid</span>
-                    </div>
-                    <div class="job-tags">
-                        <span class="job-tag">Vue.js</span>
-                        <span class="job-tag">CSS</span>
-                        <span class="job-tag">Design</span>
-                    </div>
-                    <div class="job-actions">
-                        <button class="btn-job-primary">View Details</button>
-                        <button class="btn-job-secondary">Remove</button>
-                    </div>
-                </div>
-
-                <div class="job-card feature-card">
-                    <div class="job-company-logo">💼</div>
-                    <h3 class="job-title">Full Stack Developer</h3>
-                    <p class="job-company">Enterprise Corp</p>
-                    <div class="job-meta">
-                        <span class="job-meta-item">📍 Austin, TX</span>
-                        <span class="job-meta-item">💰 $130K - $160K</span>
-                        <span class="job-meta-item">🏠 Remote</span>
-                    </div>
-                    <div class="job-tags">
-                        <span class="job-tag">Python</span>
-                        <span class="job-tag">Django</span>
-                        <span class="job-tag">AWS</span>
-                    </div>
-                    <div class="job-actions">
-                        <button class="btn-job-primary">View Details</button>
-                        <button class="btn-job-secondary">Remove</button>
-                    </div>
+                <!-- Saved jobs will be loaded dynamically -->
+                <div class="col-span-full text-center py-8 text-stone-400">
+                    <p>Loading saved jobs...</p>
                 </div>
             </div>
         </section>
@@ -202,6 +128,14 @@
     <!-- JavaScript -->
     <script src="/js/components/navigation.js"></script>
     <script src="/js/components/includes.js"></script>
+    <script src="/js/auth/auth.js"></script>
+    <script src="/js/auth/authGuard.js"></script>
+    <script>
+        // Initialize auth guard before dashboard
+        (async () => {
+            await AuthGuard.init();
+        })();
+    </script>
     <script src="/js/pages/dashboard.js"></script>
 </body>
 </html>

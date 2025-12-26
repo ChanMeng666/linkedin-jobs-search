@@ -39,6 +39,22 @@ const GEO_MONITORING = {
     AI_REFERRERS: ['ChatGPT', 'Claude', 'Perplexity', 'Copilot', 'Bard', 'GPT', 'Gemini']
 };
 
+// LinkedIn hosts for multi-country search
+const LINKEDIN_HOSTS = {
+    'us': { host: 'www.linkedin.com', name: 'United States', flag: '🇺🇸' },
+    'uk': { host: 'uk.linkedin.com', name: 'United Kingdom', flag: '🇬🇧' },
+    'ca': { host: 'ca.linkedin.com', name: 'Canada', flag: '🇨🇦' },
+    'in': { host: 'in.linkedin.com', name: 'India', flag: '🇮🇳' },
+    'au': { host: 'au.linkedin.com', name: 'Australia', flag: '🇦🇺' },
+    'de': { host: 'de.linkedin.com', name: 'Germany', flag: '🇩🇪' },
+    'fr': { host: 'fr.linkedin.com', name: 'France', flag: '🇫🇷' },
+    'sg': { host: 'sg.linkedin.com', name: 'Singapore', flag: '🇸🇬' },
+    'jp': { host: 'jp.linkedin.com', name: 'Japan', flag: '🇯🇵' },
+    'br': { host: 'br.linkedin.com', name: 'Brazil', flag: '🇧🇷' },
+    'nl': { host: 'nl.linkedin.com', name: 'Netherlands', flag: '🇳🇱' },
+    'es': { host: 'es.linkedin.com', name: 'Spain', flag: '🇪🇸' }
+};
+
 // HTTP status codes
 const HTTP_STATUS = {
     OK: 200,
@@ -58,5 +74,6 @@ module.exports = {
     LINKEDIN_DEFAULTS,
     VALIDATION,
     GEO_MONITORING,
+    LINKEDIN_HOSTS,
     HTTP_STATUS
 };

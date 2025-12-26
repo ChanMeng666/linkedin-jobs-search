@@ -7,6 +7,7 @@
 const App = {
     currentPage: 0,
     searchParams: {},
+    lastSearchResults: [],
 
     // Initialize application
     init() {
@@ -15,6 +16,7 @@ const App = {
         this.setupPagination();
         this.setupMobileToggle();
         this.setCurrentYear();
+        this.setupExportButtons();
     },
 
     // Setup event listeners
@@ -144,9 +146,152 @@ const App = {
             const result = await API.searchJobs(data);
             this.displayResults(result, data);
             this.updatePagination(result.jobs.length, data.limit || '10');
+
+            // Store results for analytics page
+            if (result.success && result.jobs) {
+                this.lastSearchResults = result.jobs;
+                localStorage.setItem('lastSearchResults', JSON.stringify(result.jobs));
+                this.updateExportButtons(true);
+            }
         } catch (error) {
             this.displayError(error);
         }
+    },
+
+    // Setup export buttons
+    setupExportButtons() {
+        const exportCSVBtn = DOM.$('exportCSV');
+        const exportExcelBtn = DOM.$('exportExcel');
+
+        if (exportCSVBtn) {
+            exportCSVBtn.addEventListener('click', () => this.handleExport('csv'));
+        }
+        if (exportExcelBtn) {
+            exportExcelBtn.addEventListener('click', () => this.handleExport('excel'));
+        }
+    },
+
+    // Handle export with auth check
+    async handleExport(format) {
+        if (typeof AuthGuard !== 'undefined') {
+            const featureKey = format === 'csv' ? 'exportCSV' : 'exportExcel';
+            await AuthGuard.requireAuth(featureKey, () => this.exportResults(format));
+        } else {
+            this.exportResults(format);
+        }
+    },
+
+    // Update export button state
+    updateExportButtons(enabled) {
+        const exportCSVBtn = DOM.$('exportCSV');
+        const exportExcelBtn = DOM.$('exportExcel');
+
+        if (exportCSVBtn) exportCSVBtn.disabled = !enabled;
+        if (exportExcelBtn) exportExcelBtn.disabled = !enabled;
+    },
+
+    // Export search results
+    async exportResults(format) {
+        if (this.lastSearchResults.length === 0) {
+            alert('No search results to export. Please search first.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/export/${format}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ jobs: this.lastSearchResults })
+            });
+
+            if (!response.ok) throw new Error('Export failed');
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `jobs-export.${format === 'excel' ? 'xlsx' : format}`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        } catch (error) {
+            console.error('Export error:', error);
+            alert('Failed to export. Please try again.');
+        }
+    },
+
+    // Save job to favorites
+    async saveJob(job) {
+        // Check auth using AuthGuard
+        if (typeof AuthGuard !== 'undefined') {
+            const canProceed = await AuthGuard.requireAuth('saveJob', () => this.performSaveJob(job));
+            if (!canProceed) return;
+        } else if (typeof Auth === 'undefined' || !Auth.isAuthenticated()) {
+            alert('Please sign in to save jobs.');
+            window.location.href = '/login.html';
+            return;
+        } else {
+            await this.performSaveJob(job);
+        }
+    },
+
+    // Perform the actual job save
+    async performSaveJob(job) {
+        try {
+            const response = await fetch('/api/user/saved-jobs', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...Auth.getAuthHeaders()
+                },
+                body: JSON.stringify({
+                    jobId: job.jobId || this.generateJobId(job),
+                    position: job.position,
+                    company: job.company,
+                    location: job.location,
+                    salary: job.salary,
+                    jobUrl: job.jobUrl
+                })
+            });
+
+            if (!response.ok) throw new Error('Save failed');
+
+            const result = await response.json();
+            if (result.success) {
+                // Update button state
+                const btn = document.querySelector(`[data-job-url="${job.jobUrl}"] .save-job-btn`);
+                if (btn) {
+                    btn.classList.add('saved');
+                    btn.innerHTML = this.getSavedIcon();
+                }
+            }
+        } catch (error) {
+            console.error('Save job error:', error);
+            alert('Failed to save job. Please try again.');
+        }
+    },
+
+    // Generate a job ID from URL
+    generateJobId(job) {
+        const match = job.jobUrl.match(/view\/(\d+)/);
+        return match ? match[1] : btoa(job.jobUrl).substring(0, 20);
+    },
+
+    // Get save icon SVG
+    getSaveIcon() {
+        return `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+        </svg>`;
+    },
+
+    // Get saved icon SVG
+    getSavedIcon() {
+        return `<svg fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" class="w-5 h-5 text-red-500">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+        </svg>`;
     },
 
     // Display search results
@@ -180,17 +325,25 @@ const App = {
 
     // Render individual job card
     renderJobCard(job) {
+        const jobData = encodeURIComponent(JSON.stringify(job));
         return `
-            <div class="job-card">
+            <div class="job-card" data-job-url="${Formatters.escapeHTML(job.jobUrl)}">
                 <div class="job-card-header">
                     <div class="job-card-info">
                         <h2 class="job-card-position">${Formatters.escapeHTML(job.position)}</h2>
                         <p class="job-card-company">${Formatters.escapeHTML(job.company)}</p>
                     </div>
-                    ${job.companyLogo ? `
-                        <img src="${job.companyLogo}" alt="${Formatters.escapeHTML(job.company)} logo"
-                             class="job-card-logo">
-                    ` : ''}
+                    <div class="flex items-center gap-2">
+                        <button class="save-job-btn p-2 rounded-full hover:bg-stone-100 transition-colors"
+                                onclick="App.saveJob(JSON.parse(decodeURIComponent('${jobData}')))"
+                                title="Save to favorites">
+                            ${this.getSaveIcon()}
+                        </button>
+                        ${job.companyLogo ? `
+                            <img src="${job.companyLogo}" alt="${Formatters.escapeHTML(job.company)} logo"
+                                 class="job-card-logo">
+                        ` : ''}
+                    </div>
                 </div>
                 <div class="job-card-meta">
                     <div class="job-card-meta-item">

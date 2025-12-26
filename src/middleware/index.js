@@ -12,6 +12,7 @@ const {
     validationErrorHandler
 } = require('./errorHandler');
 const { securityMiddleware, additionalSecurityHeaders } = require('./security');
+const { verifyJWT, verifyWithStackAPI, optionalAuth, extractToken } = require('./auth.middleware');
 
 module.exports = {
     // Security
@@ -30,5 +31,11 @@ module.exports = {
     notFoundHandler,
     errorHandler,
     asyncHandler,
-    validationErrorHandler
+    validationErrorHandler,
+
+    // Auth Middleware
+    verifyJWT,
+    verifyWithStackAPI,
+    optionalAuth,
+    extractToken
 };

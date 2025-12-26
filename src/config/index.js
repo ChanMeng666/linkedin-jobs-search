@@ -7,6 +7,7 @@ const corsOptions = require('./cors.config');
 const cache = require('./cache.config');
 const limiter = require('./rateLimit.config');
 const constants = require('./constants');
+const { STACK_AUTH_CONFIG } = require('./auth.config');
 
 // Application-wide configuration
 const APP_CONFIG = {
@@ -24,5 +25,6 @@ module.exports = {
     cache,
     limiter,
     APP_CONFIG,
+    STACK_AUTH_CONFIG,
     ...constants
 };

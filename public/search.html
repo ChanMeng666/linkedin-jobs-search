@@ -39,6 +39,50 @@
                     <p class="search-page-subtitle">Find your perfect opportunity</p>
                 </div>
 
+                <!-- Guest CTA Banner -->
+                <div data-guest-only class="mb-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
+                    <div class="flex items-center justify-between flex-wrap gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-stone-800">Sign in to unlock all features</p>
+                                <p class="text-xs text-stone-600">Save jobs, export results, and view analytics</p>
+                            </div>
+                        </div>
+                        <a href="/login.html?from=save" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
+                            Sign In Free
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Export Buttons -->
+                <div class="flex gap-3 mb-4">
+                    <button id="exportCSV" disabled class="flex items-center gap-2 px-4 py-2 bg-white border border-stone-300 rounded-lg text-stone-600 hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Export CSV
+                        <span data-guest-only class="text-xs text-stone-400">(Sign in)</span>
+                    </button>
+                    <button id="exportExcel" disabled class="flex items-center gap-2 px-4 py-2 bg-white border border-stone-300 rounded-lg text-stone-600 hover:bg-stone-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Export Excel
+                        <span data-guest-only class="text-xs text-stone-400">(Sign in)</span>
+                    </button>
+                    <a href="/analytics.html" class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors ml-auto">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                        View Analytics
+                    </a>
+                </div>
+
                 <!-- Search Results Area -->
                 <div id="searchContent" class="space-y-6">
                     <div id="searchParams" class="p-5"></div>
@@ -61,6 +105,24 @@
                 <form id="searchForm" class="search-form-card sticky top-0">
                     <h2 class="search-form-title">Search Filters</h2>
                     <div class="space-y-5">
+                        <div class="search-form-group">
+                            <label class="search-form-label">Country/Region</label>
+                            <select name="country" class="search-input">
+                                <option value="us">United States</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="ca">Canada</option>
+                                <option value="in">India</option>
+                                <option value="au">Australia</option>
+                                <option value="de">Germany</option>
+                                <option value="fr">France</option>
+                                <option value="sg">Singapore</option>
+                                <option value="jp">Japan</option>
+                                <option value="br">Brazil</option>
+                                <option value="nl">Netherlands</option>
+                                <option value="es">Spain</option>
+                            </select>
+                        </div>
+
                         <div class="search-form-group">
                             <label class="search-form-label">Keywords</label>
                             <input type="text" name="keyword" class="search-input" placeholder="e.g., Software Developer">
@@ -192,6 +254,8 @@
     <script src="/js/utils/dom.js"></script>
     <script src="/js/utils/formatters.js"></script>
     <script src="/js/api.js"></script>
+    <script src="/js/auth/auth.js"></script>
+    <script src="/js/auth/authGuard.js"></script>
     <script src="/js/main.js"></script>
 </body>
 </html>

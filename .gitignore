@@ -51,3 +51,5 @@ coverage/
 # Temporary files
 tmp/
 temp/
+.env*.local
+linkedin-jobs-api/

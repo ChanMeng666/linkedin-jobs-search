@@ -4,7 +4,7 @@
  */
 
 const linkedIn = require('linkedin-jobs-api');
-const { APP_CONFIG } = require('../config');
+const { APP_CONFIG, LINKEDIN_HOSTS } = require('../config');
 const logger = require('../utils/logger');
 
 class LinkedInService {
@@ -60,8 +60,14 @@ class LinkedInService {
             limit,
             page,
             has_verification,
-            under_10_applicants
+            under_10_applicants,
+            country
         } = params;
+
+        // Get host from country code
+        const hostConfig = country && LINKEDIN_HOSTS[country]
+            ? LINKEDIN_HOSTS[country]
+            : LINKEDIN_HOSTS['us'];
 
         return {
             keyword,
@@ -75,7 +81,67 @@ class LinkedInService {
             limit: limit || APP_CONFIG.LINKEDIN_DEFAULTS.LIMIT,
             page: page || APP_CONFIG.LINKEDIN_DEFAULTS.PAGE,
             has_verification: has_verification === true || has_verification === 'true',
-            under_10_applicants: under_10_applicants === true || under_10_applicants === 'true'
+            under_10_applicants: under_10_applicants === true || under_10_applicants === 'true',
+            host: hostConfig.host
+        };
+    }
+
+    /**
+     * Get available countries for multi-country search
+     */
+    getAvailableCountries() {
+        return Object.entries(LINKEDIN_HOSTS).map(([code, config]) => ({
+            code,
+            name: config.name,
+            flag: config.flag
+        }));
+    }
+
+    /**
+     * Search jobs across multiple countries
+     */
+    async searchMultipleCountries(params, countryCodes) {
+        const results = await Promise.all(
+            countryCodes.map(async (country) => {
+                try {
+                    const result = await this.searchJobs({
+                        ...this.buildQueryOptions({ ...params, country })
+                    });
+                    return {
+                        country,
+                        countryName: LINKEDIN_HOSTS[country]?.name || country,
+                        ...result
+                    };
+                } catch (error) {
+                    logger.error(`Failed to search in ${country}`, { error: error.message });
+                    return {
+                        country,
+                        countryName: LINKEDIN_HOSTS[country]?.name || country,
+                        success: false,
+                        error: error.message,
+                        jobs: []
+                    };
+                }
+            })
+        );
+
+        // Aggregate results
+        const allJobs = results.flatMap(r =>
+            r.jobs.map(job => ({ ...job, country: r.country, countryName: r.countryName }))
+        );
+
+        return {
+            success: true,
+            totalCount: allJobs.length,
+            jobs: allJobs,
+            byCountry: results.reduce((acc, r) => {
+                acc[r.country] = {
+                    name: r.countryName,
+                    count: r.jobs?.length || 0,
+                    jobs: r.jobs || []
+                };
+                return acc;
+            }, {})
         };
     }
 

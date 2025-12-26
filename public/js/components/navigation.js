@@ -1,6 +1,6 @@
 /**
  * Navigation Component
- * Handles mobile menu, scroll effects, and active link highlighting
+ * Handles mobile menu, scroll effects, active link highlighting, and user dropdown
  */
 
 class Navigation {
@@ -11,6 +11,11 @@ class Navigation {
     this.navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
     this.scrollThreshold = 50;
 
+    // User dropdown elements
+    this.userTrigger = document.getElementById('navUserTrigger');
+    this.dropdownMenu = document.getElementById('navDropdownMenu');
+    this.isDropdownOpen = false;
+
     this.init();
   }
 
@@ -19,6 +24,8 @@ class Navigation {
     this.setupMobileMenu();
     this.highlightActiveLink();
     this.setupSmoothScroll();
+    this.setupUserDropdown();
+    this.setupAuthStateListener();
   }
 
   /**
@@ -110,9 +117,11 @@ class Navigation {
 
     // Reset button icon
     const icon = this.mobileToggle.querySelector('svg');
-    icon.innerHTML = `
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-    `;
+    if (icon) {
+      icon.innerHTML = `
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      `;
+    }
 
     // Restore body scroll
     document.body.style.overflow = '';
@@ -143,7 +152,8 @@ class Navigation {
    */
   setupSmoothScroll() {
     this.navLinks.forEach(link => {
-      if (link.getAttribute('href').startsWith('#')) {
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
         link.addEventListener('click', (e) => {
           e.preventDefault();
           const targetId = link.getAttribute('href');
@@ -159,6 +169,142 @@ class Navigation {
         });
       }
     });
+  }
+
+  /**
+   * Setup user dropdown menu
+   */
+  setupUserDropdown() {
+    if (!this.userTrigger || !this.dropdownMenu) return;
+
+    // Toggle dropdown on click
+    this.userTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggleDropdown();
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (this.isDropdownOpen &&
+          !this.dropdownMenu.contains(e.target) &&
+          !this.userTrigger.contains(e.target)) {
+        this.closeDropdown();
+      }
+    });
+
+    // Keyboard navigation
+    this.userTrigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.toggleDropdown();
+      } else if (e.key === 'Escape') {
+        this.closeDropdown();
+      } else if (e.key === 'ArrowDown' && this.isDropdownOpen) {
+        e.preventDefault();
+        this.focusFirstMenuItem();
+      }
+    });
+
+    // Setup keyboard navigation within dropdown
+    this.dropdownMenu.addEventListener('keydown', (e) => {
+      const items = this.dropdownMenu.querySelectorAll('.nav-dropdown-item');
+      const currentIndex = Array.from(items).indexOf(document.activeElement);
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+        items[nextIndex].focus();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+        items[prevIndex].focus();
+      } else if (e.key === 'Escape') {
+        this.closeDropdown();
+        this.userTrigger.focus();
+      }
+    });
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+    this.dropdownMenu.classList.toggle('active', this.isDropdownOpen);
+    this.userTrigger.setAttribute('aria-expanded', this.isDropdownOpen);
+
+    // Rotate chevron
+    const chevron = this.userTrigger.querySelector('.nav-dropdown-chevron');
+    if (chevron) {
+      chevron.style.transform = this.isDropdownOpen ? 'rotate(180deg)' : 'rotate(0)';
+    }
+  }
+
+  closeDropdown() {
+    this.isDropdownOpen = false;
+    this.dropdownMenu.classList.remove('active');
+    this.userTrigger.setAttribute('aria-expanded', 'false');
+
+    // Reset chevron
+    const chevron = this.userTrigger.querySelector('.nav-dropdown-chevron');
+    if (chevron) {
+      chevron.style.transform = 'rotate(0)';
+    }
+  }
+
+  focusFirstMenuItem() {
+    const firstItem = this.dropdownMenu.querySelector('.nav-dropdown-item');
+    if (firstItem) {
+      firstItem.focus();
+    }
+  }
+
+  /**
+   * Listen for auth state changes
+   */
+  setupAuthStateListener() {
+    window.addEventListener('authStateChanged', (e) => {
+      this.updateAuthUI(e.detail);
+    });
+
+    // Initial check if Auth is available
+    if (typeof Auth !== 'undefined' && Auth.isInitialized) {
+      this.updateAuthUI({
+        isAuthenticated: Auth.isAuthenticated(),
+        user: Auth.user
+      });
+    }
+  }
+
+  /**
+   * Update navigation UI based on auth state
+   */
+  updateAuthUI(authState) {
+    const authRequired = document.querySelectorAll('[data-auth-required]');
+    const guestOnly = document.querySelectorAll('[data-guest-only]');
+    const userInfoElements = document.querySelectorAll('[data-user-info]');
+
+    if (authState.isAuthenticated && authState.user) {
+      // Show auth-required elements
+      authRequired.forEach(el => el.classList.remove('hidden'));
+      // Hide guest-only elements
+      guestOnly.forEach(el => el.classList.add('hidden'));
+
+      // Update user info
+      userInfoElements.forEach(el => {
+        const field = el.dataset.userInfo;
+        if (field === 'name') {
+          el.textContent = authState.user.displayName || authState.user.email?.split('@')[0] || 'User';
+        } else if (field === 'email') {
+          el.textContent = authState.user.email || '';
+        } else if (field === 'avatar' && el.tagName === 'IMG') {
+          el.src = authState.user.avatarUrl || '/assets/images/default-avatar.svg';
+          el.alt = `${authState.user.displayName || 'User'}'s avatar`;
+        }
+      });
+    } else {
+      // Hide auth-required elements
+      authRequired.forEach(el => el.classList.add('hidden'));
+      // Show guest-only elements
+      guestOnly.forEach(el => el.classList.remove('hidden'));
+    }
   }
 }
 
