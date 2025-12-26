@@ -43,19 +43,22 @@ router.get('/signin/:provider', async (req, res) => {
         })).toString('base64url');
 
         // Call Stack Auth to initiate OAuth
+        // Stack Auth: client_id = projectId, client_secret = publishableKey
         const response = await fetch(`${STACK_AUTH_CONFIG.apiUrl}/auth/oauth/authorize/${provider}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'x-stack-project-id': STACK_AUTH_CONFIG.projectId,
-                'x-stack-publishable-client-key': STACK_AUTH_CONFIG.publishableKey,
-                'x-stack-secret-server-key': STACK_AUTH_CONFIG.secretKey
+                'x-stack-publishable-client-key': STACK_AUTH_CONFIG.publishableKey
             },
             body: JSON.stringify({
+                client_id: STACK_AUTH_CONFIG.projectId,
+                client_secret: STACK_AUTH_CONFIG.publishableKey,
                 redirect_uri: callbackUrl,
                 state: stateData,
                 code_challenge: pkce.challenge,
-                code_challenge_method: 'S256'
+                code_challenge_method: 'S256',
+                grant_type: 'authorization_code'
             })
         });
 
@@ -64,9 +67,10 @@ router.get('/signin/:provider', async (req, res) => {
             console.error('Stack Auth OAuth init error:', error);
 
             // Fallback: try direct redirect approach
+            // Stack Auth requires: client_id = projectId, client_secret = publishableKey
             const authUrl = new URL(`https://api.stack-auth.com/api/v1/auth/oauth/authorize/${provider}`);
-            authUrl.searchParams.set('client_id', STACK_AUTH_CONFIG.publishableKey);
-            authUrl.searchParams.set('client_secret', STACK_AUTH_CONFIG.secretKey);
+            authUrl.searchParams.set('client_id', STACK_AUTH_CONFIG.projectId);
+            authUrl.searchParams.set('client_secret', STACK_AUTH_CONFIG.publishableKey);
             authUrl.searchParams.set('redirect_uri', callbackUrl);
             authUrl.searchParams.set('response_type', 'code');
             authUrl.searchParams.set('scope', 'openid profile email');
