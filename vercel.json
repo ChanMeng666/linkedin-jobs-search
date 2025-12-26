@@ -1,35 +1,15 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/test.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "src/server.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "public/**",
-      "use": "@vercel/static"
+  "installCommand": "npm install",
+  "buildCommand": "npm run vercel-build",
+  "outputDirectory": "public",
+  "functions": {
+    "api/**/*.js": {
+      "includeFiles": "src/**"
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/test",
-      "dest": "api/test.js"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "src/server.js"
-    },
-    {
-      "src": "/",
-      "dest": "public/index.html"
-    },
-    {
-      "src": "/(.+)",
-      "dest": "public/$1"
-    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.js" },
+    { "source": "/(.*)", "destination": "/$1" }
   ]
 } 

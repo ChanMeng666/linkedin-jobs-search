@@ -1,5 +1,5 @@
 /**
- * Minimal test endpoint - no dependencies
+ * Diagnostic test endpoint
  */
 
 const fs = require('fs');
@@ -19,48 +19,46 @@ module.exports = (req, res) => {
             hasStackSecretKey: !!process.env.STACK_SECRET_SERVER_KEY
         },
         files: {},
-        nodeModulesExists: false
+        modules: {}
     };
 
-    // Check if node_modules exists
-    try {
-        const nodeModulesPath = path.join(process.cwd(), 'node_modules');
-        diagnostics.nodeModulesExists = fs.existsSync(nodeModulesPath);
-
-        if (diagnostics.nodeModulesExists) {
-            const modules = fs.readdirSync(nodeModulesPath).slice(0, 20);
-            diagnostics.files.node_modules_sample = modules;
-        }
-    } catch (e) {
-        diagnostics.files.node_modules_error = e.message;
-    }
-
-    // Check package.json
-    try {
-        const pkgPath = path.join(process.cwd(), 'package.json');
-        if (fs.existsSync(pkgPath)) {
-            const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-            diagnostics.files.package_json = {
-                name: pkg.name,
-                dependencies: Object.keys(pkg.dependencies || {})
-            };
-        }
-    } catch (e) {
-        diagnostics.files.package_json_error = e.message;
-    }
-
-    // List files in current directory
+    // Check directory structure
     try {
         diagnostics.files.cwd_contents = fs.readdirSync(process.cwd());
+
+        // Check for src directory
+        const srcPath = path.join(process.cwd(), 'src');
+        if (fs.existsSync(srcPath)) {
+            diagnostics.files.src_contents = fs.readdirSync(srcPath);
+        }
+
+        // Check for node_modules
+        const nodeModulesPath = path.join(process.cwd(), 'node_modules');
+        diagnostics.nodeModulesExists = fs.existsSync(nodeModulesPath);
+        if (diagnostics.nodeModulesExists) {
+            diagnostics.files.node_modules_sample = fs.readdirSync(nodeModulesPath).slice(0, 15);
+        }
     } catch (e) {
-        diagnostics.files.cwd_error = e.message;
+        diagnostics.files.error = e.message;
     }
 
-    // List files in /var/task
+    // Test module loading
+    const testModules = ['express', 'cors', 'dotenv'];
+    for (const mod of testModules) {
+        try {
+            require(mod);
+            diagnostics.modules[mod] = 'OK';
+        } catch (e) {
+            diagnostics.modules[mod] = e.message;
+        }
+    }
+
+    // Test app loading
     try {
-        diagnostics.files.var_task = fs.readdirSync('/var/task');
+        require('../src/app');
+        diagnostics.modules['src/app'] = 'OK';
     } catch (e) {
-        diagnostics.files.var_task_error = e.message;
+        diagnostics.modules['src/app'] = e.message;
     }
 
     res.status(200).json(diagnostics);
