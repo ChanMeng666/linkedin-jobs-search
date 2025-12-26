@@ -1,11 +1,11 @@
 "use client";
 
 import { StackProvider as StackAuthProvider, StackTheme } from "@stackframe/stack";
-import { stackClientApp } from "@/lib/stack-client";
+import { stackServerApp } from "@/lib/stack";
 
 export function StackProvider({ children }: { children: React.ReactNode }) {
   return (
-    <StackAuthProvider app={stackClientApp}>
+    <StackAuthProvider app={stackServerApp}>
       <StackTheme>
         {children}
       </StackTheme>
