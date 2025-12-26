@@ -68,16 +68,14 @@ router.get('/signin/:provider', async (req, res) => {
 
             // Fallback: try direct redirect approach
             // Stack Auth requires: client_id = projectId, client_secret = publishableKey
+            // Note: Don't specify scope - Stack Auth manages scopes internally
             const authUrl = new URL(`https://api.stack-auth.com/api/v1/auth/oauth/authorize/${provider}`);
             authUrl.searchParams.set('client_id', STACK_AUTH_CONFIG.projectId);
             authUrl.searchParams.set('client_secret', STACK_AUTH_CONFIG.publishableKey);
             authUrl.searchParams.set('redirect_uri', callbackUrl);
-            authUrl.searchParams.set('response_type', 'code');
-            authUrl.searchParams.set('scope', 'openid profile email');
             authUrl.searchParams.set('state', stateData);
             authUrl.searchParams.set('code_challenge', pkce.challenge);
             authUrl.searchParams.set('code_challenge_method', 'S256');
-            authUrl.searchParams.set('grant_type', 'authorization_code');
 
             return res.redirect(authUrl.toString());
         }
