@@ -44,6 +44,12 @@ router.get('/signin/:provider', async (req, res) => {
 
         // Call Stack Auth to initiate OAuth
         // Stack Auth: client_id = projectId, client_secret = publishableKey
+        console.log('Initiating OAuth with Stack Auth:', {
+            url: `${STACK_AUTH_CONFIG.apiUrl}/auth/oauth/authorize/${provider}`,
+            projectId: STACK_AUTH_CONFIG.projectId,
+            redirectUri: callbackUrl
+        });
+
         const response = await fetch(`${STACK_AUTH_CONFIG.apiUrl}/auth/oauth/authorize/${provider}`, {
             method: 'POST',
             headers: {
@@ -52,31 +58,33 @@ router.get('/signin/:provider', async (req, res) => {
                 'x-stack-publishable-client-key': STACK_AUTH_CONFIG.publishableKey
             },
             body: JSON.stringify({
-                client_id: STACK_AUTH_CONFIG.projectId,
-                client_secret: STACK_AUTH_CONFIG.publishableKey,
                 redirect_uri: callbackUrl,
                 state: stateData,
                 code_challenge: pkce.challenge,
-                code_challenge_method: 'S256',
-                grant_type: 'authorization_code'
+                code_challenge_method: 'S256'
             })
         });
 
+        console.log('Stack Auth response status:', response.status);
+
         if (!response.ok) {
             const error = await response.json().catch(() => ({}));
-            console.error('Stack Auth OAuth init error:', error);
+            console.error('Stack Auth OAuth init error:', JSON.stringify(error, null, 2));
 
             // Fallback: try direct redirect approach
-            // Stack Auth requires: client_id = projectId, client_secret = publishableKey
-            // Note: Don't specify scope - Stack Auth manages scopes internally
+            // Stack Auth requires specific parameters for GET authorize endpoint
             const authUrl = new URL(`https://api.stack-auth.com/api/v1/auth/oauth/authorize/${provider}`);
             authUrl.searchParams.set('client_id', STACK_AUTH_CONFIG.projectId);
             authUrl.searchParams.set('client_secret', STACK_AUTH_CONFIG.publishableKey);
             authUrl.searchParams.set('redirect_uri', callbackUrl);
+            authUrl.searchParams.set('response_type', 'code');
+            authUrl.searchParams.set('scope', 'openid');
+            authUrl.searchParams.set('grant_type', 'authorization_code');
             authUrl.searchParams.set('state', stateData);
             authUrl.searchParams.set('code_challenge', pkce.challenge);
             authUrl.searchParams.set('code_challenge_method', 'S256');
 
+            console.log('Fallback OAuth URL:', authUrl.toString());
             return res.redirect(authUrl.toString());
         }
 
