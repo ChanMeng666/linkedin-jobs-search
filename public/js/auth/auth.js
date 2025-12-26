@@ -30,10 +30,15 @@ const Auth = {
         // Load config from server
         await this.loadConfig();
 
+        // Check for tokens in URL fragment (from server-side OAuth callback)
+        if (window.location.hash) {
+            await this.handleTokensFromHash();
+        }
+
         // Check for stored session
         await this.checkSession();
 
-        // Handle OAuth callback if on callback page
+        // Handle OAuth callback if on callback page (legacy)
         if (window.location.pathname.includes('auth-callback')) {
             await this.handleOAuthCallback();
         }
@@ -43,6 +48,34 @@ const Auth = {
 
         this.isInitialized = true;
         return this;
+    },
+
+    /**
+     * Handle tokens from URL hash fragment
+     */
+    async handleTokensFromHash() {
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+
+        const accessToken = params.get('access_token');
+        const refreshToken = params.get('refresh_token');
+
+        if (accessToken) {
+            // Store tokens
+            localStorage.setItem('stack_access_token', accessToken);
+            if (refreshToken) {
+                localStorage.setItem('stack_refresh_token', refreshToken);
+            }
+
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
+
+            // Clear hash from URL
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+
+            // Sync user with backend
+            await this.syncUser();
+        }
     },
 
     /**
@@ -214,51 +247,26 @@ const Auth = {
     },
 
     /**
-     * Initiate OAuth login with validation and PKCE
+     * Initiate OAuth login via server-side flow
      */
     async loginWithOAuth(provider) {
-        // Ensure config is loaded
-        if (!this.configLoaded) {
-            await this.loadConfig();
-        }
-
-        // Validate config before proceeding
-        const validation = this.validateConfig();
-        if (!validation.valid) {
-            this.showError(validation.error);
-            return;
-        }
-
         // Store intended URL for post-login redirect
         const currentUrl = window.location.href;
+        let redirectUrl = '/dashboard.html';
+
         if (!currentUrl.includes('login.html') && !currentUrl.includes('auth-callback')) {
-            sessionStorage.setItem('intended_url', currentUrl);
+            redirectUrl = currentUrl;
+        } else {
+            // Check if there's an intended URL stored
+            const intended = sessionStorage.getItem('intended_url');
+            if (intended) {
+                redirectUrl = intended;
+            }
         }
 
-        const callbackUrl = `${window.location.origin}/auth-callback.html`;
-
-        // Generate PKCE code verifier and challenge
-        const codeVerifier = this.generateCodeVerifier();
-        const codeChallenge = await this.generateCodeChallenge(codeVerifier);
-        const state = this.generateState();
-
-        // Store PKCE verifier and state for callback
-        localStorage.setItem('oauth_code_verifier', codeVerifier);
-        localStorage.setItem('oauth_state', state);
-        localStorage.setItem('oauth_provider', provider);
-
-        // Stack Auth OAuth URL format with PKCE
-        const authUrl = new URL(`https://api.stack-auth.com/api/v1/auth/oauth/authorize/${provider}`);
-
-        authUrl.searchParams.set('client_id', this.config.publishableKey);
-        authUrl.searchParams.set('redirect_uri', callbackUrl);
-        authUrl.searchParams.set('response_type', 'code');
-        authUrl.searchParams.set('scope', 'openid profile email');
-        authUrl.searchParams.set('state', state);
-        authUrl.searchParams.set('code_challenge', codeChallenge);
-        authUrl.searchParams.set('code_challenge_method', 'S256');
-
-        window.location.href = authUrl.toString();
+        // Use server-side OAuth initiation
+        const oauthUrl = `/api/oauth/signin/${provider}?redirect_url=${encodeURIComponent(redirectUrl)}`;
+        window.location.href = oauthUrl;
     },
 
     /**

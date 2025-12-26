@@ -7,6 +7,7 @@ const jobsRoutes = require('./jobs.routes');
 const geoRoutes = require('./geo.routes');
 const healthRoutes = require('./health.routes');
 const authRoutes = require('./auth.routes');
+const oauthRoutes = require('./oauth.routes');
 const userRoutes = require('./user.routes');
 const exportRoutes = require('./export.routes');
 const analyticsRoutes = require('./analytics.routes');
@@ -16,6 +17,7 @@ module.exports = {
     geoRoutes,
     healthRoutes,
     authRoutes,
+    oauthRoutes,
     userRoutes,
     exportRoutes,
     analyticsRoutes
