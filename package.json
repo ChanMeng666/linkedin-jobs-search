@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
-    "@stackframe/stack": "^2.6.39",
+    "@stackframe/stack": "^2.8.56",
     "drizzle-orm": "^0.38.3",
     "exceljs": "^4.4.0",
     "json2csv": "^6.0.0-alpha.2",
