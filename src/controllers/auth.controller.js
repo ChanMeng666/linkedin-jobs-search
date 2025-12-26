@@ -3,12 +3,21 @@
  * Handles authentication-related operations
  */
 
-const { db } = require('../db');
-const { users } = require('../db/schema');
-const { eq } = require('drizzle-orm');
 const { asyncHandler } = require('../middleware/errorHandler');
 const logger = require('../utils/logger');
 const { STACK_AUTH_CONFIG, HTTP_STATUS } = require('../config');
+
+// Lazy load database to prevent initialization errors for non-DB endpoints
+let db, users, eq;
+const getDb = () => {
+    if (!db) {
+        const dbModule = require('../db');
+        db = dbModule.db;
+        users = require('../db/schema').users;
+        eq = require('drizzle-orm').eq;
+    }
+    return { db, users, eq };
+};
 
 /**
  * Sync user after OAuth login
@@ -25,6 +34,8 @@ const syncUser = asyncHandler(async (req, res) => {
     }
 
     try {
+        const { db, users, eq } = getDb();
+
         // Check if user exists
         const existingUsers = await db.select()
             .from(users)
