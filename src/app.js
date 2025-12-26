@@ -46,6 +46,35 @@ app.use((req, res, next) => {
     next();
 });
 
+// Diagnostic endpoint (before other routes)
+app.get('/api/debug/config', (req, res) => {
+    try {
+        const { STACK_AUTH_CONFIG } = require('./config');
+        res.json({
+            success: true,
+            env: {
+                NODE_ENV: process.env.NODE_ENV,
+                hasDatabase: !!process.env.DATABASE_URL,
+                hasStackProjectId: !!process.env.NEXT_PUBLIC_STACK_PROJECT_ID,
+                hasStackPublishableKey: !!process.env.NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY,
+                hasStackSecretKey: !!process.env.STACK_SECRET_SERVER_KEY,
+                stackProjectId: process.env.NEXT_PUBLIC_STACK_PROJECT_ID || 'NOT SET'
+            },
+            config: {
+                projectId: STACK_AUTH_CONFIG?.projectId,
+                hasPublishableKey: !!STACK_AUTH_CONFIG?.publishableKey,
+                isConfigured: STACK_AUTH_CONFIG?.isConfigured
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message,
+            stack: error.stack
+        });
+    }
+});
+
 // API Routes
 app.use('/api', healthRoutes);              // Health check and system status
 app.use('/api/jobs', jobsRoutes);           // Job search operations
