@@ -214,7 +214,7 @@ const Auth = {
     },
 
     /**
-     * Initiate OAuth login with validation
+     * Initiate OAuth login with validation and PKCE
      */
     async loginWithOAuth(provider) {
         // Ensure config is loaded
@@ -237,18 +237,26 @@ const Auth = {
 
         const callbackUrl = `${window.location.origin}/auth-callback.html`;
 
-        // Stack Auth OAuth URL format
+        // Generate PKCE code verifier and challenge
+        const codeVerifier = this.generateCodeVerifier();
+        const codeChallenge = await this.generateCodeChallenge(codeVerifier);
+        const state = this.generateState();
+
+        // Store PKCE verifier and state for callback
+        localStorage.setItem('oauth_code_verifier', codeVerifier);
+        localStorage.setItem('oauth_state', state);
+        localStorage.setItem('oauth_provider', provider);
+
+        // Stack Auth OAuth URL format with PKCE
         const authUrl = new URL(`https://api.stack-auth.com/api/v1/auth/oauth/authorize/${provider}`);
 
         authUrl.searchParams.set('client_id', this.config.publishableKey);
         authUrl.searchParams.set('redirect_uri', callbackUrl);
         authUrl.searchParams.set('response_type', 'code');
         authUrl.searchParams.set('scope', 'openid profile email');
-        authUrl.searchParams.set('state', this.generateState());
-
-        // Store state for verification
-        localStorage.setItem('oauth_state', authUrl.searchParams.get('state'));
-        localStorage.setItem('oauth_provider', provider);
+        authUrl.searchParams.set('state', state);
+        authUrl.searchParams.set('code_challenge', codeChallenge);
+        authUrl.searchParams.set('code_challenge_method', 'S256');
 
         window.location.href = authUrl.toString();
     },
@@ -260,6 +268,33 @@ const Auth = {
         const array = new Uint8Array(16);
         crypto.getRandomValues(array);
         return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    },
+
+    /**
+     * Generate PKCE code verifier
+     */
+    generateCodeVerifier() {
+        const array = new Uint8Array(32);
+        crypto.getRandomValues(array);
+        return this.base64URLEncode(array);
+    },
+
+    /**
+     * Generate PKCE code challenge from verifier
+     */
+    async generateCodeChallenge(verifier) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(verifier);
+        const hash = await crypto.subtle.digest('SHA-256', data);
+        return this.base64URLEncode(new Uint8Array(hash));
+    },
+
+    /**
+     * Base64 URL encode
+     */
+    base64URLEncode(buffer) {
+        const base64 = btoa(String.fromCharCode(...buffer));
+        return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
     },
 
     /**
@@ -346,7 +381,11 @@ const Auth = {
         }
 
         try {
-            // Exchange code for tokens
+            // Get stored PKCE code verifier
+            const codeVerifier = localStorage.getItem('oauth_code_verifier');
+            localStorage.removeItem('oauth_code_verifier');
+
+            // Exchange code for tokens with PKCE
             const response = await fetch(`${this.config.apiUrl}/auth/oauth/token`, {
                 method: 'POST',
                 headers: {
@@ -357,7 +396,8 @@ const Auth = {
                 body: JSON.stringify({
                     grant_type: 'authorization_code',
                     code: code,
-                    redirect_uri: `${window.location.origin}/auth-callback.html`
+                    redirect_uri: `${window.location.origin}/auth-callback.html`,
+                    code_verifier: codeVerifier
                 })
             });
 
@@ -482,6 +522,7 @@ const Auth = {
         localStorage.removeItem('stack_refresh_token');
         localStorage.removeItem('oauth_state');
         localStorage.removeItem('oauth_provider');
+        localStorage.removeItem('oauth_code_verifier');
         this.user = null;
         this.accessToken = null;
         this.refreshToken = null;
