@@ -276,13 +276,12 @@ export default function DashboardPage() {
       {toast && (
         <Flex
           position="fixed"
-          zIndex={50}
           padding="16"
           paddingX="24"
           radius="l"
           shadow="l"
           background={toast.type === 'success' ? 'success-strong' : 'danger-strong'}
-          style={{ top: 80, right: 24 }}
+          style={{ top: 80, right: 24, zIndex: 50 }}
           className="animate-fade-in-up"
         >
           <Text variant="body-default-s" onSolid="neutral-strong">
@@ -908,13 +907,13 @@ function Modal({
   return (
     <Flex
       position="fixed"
-      zIndex={50}
       horizontal="center"
       vertical="center"
       padding="24"
       style={{
         inset: 0,
         background: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 50,
       }}
       onClick={onClose}
     >

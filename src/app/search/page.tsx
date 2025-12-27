@@ -215,12 +215,11 @@ function SearchContent() {
       {toast && (
         <Flex
           position="fixed"
-          zIndex={100}
           padding="16"
           radius="m"
           shadow="l"
           background={toast.type === 'success' ? 'success-strong' : 'danger-strong'}
-          style={{ top: 24, right: 24 }}
+          style={{ top: 24, right: 24, zIndex: 100 }}
           className="animate-fade-in-up"
         >
           <Text onSolid="neutral-strong">{toast.message}</Text>
@@ -499,11 +498,10 @@ function SearchContent() {
       {showSaveModal && (
         <Flex
           position="fixed"
-          zIndex={50}
           horizontal="center"
           vertical="center"
           padding="16"
-          style={{ inset: 0, background: 'rgba(0,0,0,0.5)' }}
+          style={{ inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 50 }}
           onClick={() => setShowSaveModal(false)}
         >
           <Column
