@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useUser } from '@stackframe/stack';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Flex } from '@once-ui-system/core';
+import { Column, Flex, Heading, Text, Button } from '@once-ui-system/core';
 import { Spinner } from '@/components/common/Spinner';
 
 type SavedJob = {
@@ -194,228 +194,356 @@ export default function AnalyticsPage() {
   const hasData = savedJobs.length > 0 || searchHistory.length > 0;
 
   return (
-    <div className="min-h-screen bg-stone-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-stone-900 mb-2">Analytics</h1>
-          <p className="text-stone-600">Insights from your job search activity</p>
-        </div>
+    <Column maxWidth="l" gap="xl" paddingY="xl" fillWidth>
+      {/* Header */}
+      <Column gap="8">
+        <Heading variant="display-strong-l">Analytics</Heading>
+        <Text variant="body-default-l" onBackground="neutral-weak">
+          Insights from your job search activity
+        </Text>
+      </Column>
 
-        {loading ? (
-          <Flex horizontal="center" vertical="center" paddingY="80">
-            <Spinner size="l" />
+      {loading ? (
+        <Flex horizontal="center" vertical="center" paddingY="80">
+          <Spinner size="l" />
+        </Flex>
+      ) : !hasData ? (
+        <Column
+          padding="48"
+          radius="l"
+          border="neutral-alpha-weak"
+          background="surface"
+          className="glass-card"
+          horizontal="center"
+          gap="24"
+        >
+          <Flex
+            style={{ width: 80, height: 80 }}
+            radius="l"
+            background="brand-alpha-weak"
+            horizontal="center"
+            vertical="center"
+          >
+            <ChartIcon style={{ width: 40, height: 40, color: 'var(--brand-on-background-strong)' }} />
           </Flex>
-        ) : !hasData ? (
-          <div className="card p-12 text-center">
-            <div className="w-20 h-20 rounded-2xl bg-brand-primary/10 flex items-center justify-center mx-auto mb-6">
-              <ChartIcon className="w-10 h-10 text-brand-primary" />
-            </div>
-            <h2 className="text-2xl font-bold text-stone-900 mb-3">No Data Yet</h2>
-            <p className="text-stone-600 max-w-md mx-auto mb-6">
-              Start searching and saving jobs to see insights and analytics about your job search activity.
-            </p>
-            <Link href="/search" className="btn btn-primary">
+          <Heading variant="heading-strong-l" align="center">No Data Yet</Heading>
+          <Text variant="body-default-m" onBackground="neutral-weak" align="center" style={{ maxWidth: 400 }}>
+            Start searching and saving jobs to see insights and analytics about your job search activity.
+          </Text>
+          <Link href="/search" style={{ textDecoration: 'none' }}>
+            <Button variant="primary" size="l">
               Start Searching
-            </Link>
-          </div>
-        ) : (
-          <>
-            {/* Summary Stats */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <SummaryCard
-                title="Total Saved Jobs"
-                value={savedJobs.length}
-                icon={<BookmarkIcon />}
-                color="blue"
-              />
-              <SummaryCard
-                title="Applications Sent"
-                value={savedJobs.filter(j => j.status === 'applied').length}
-                icon={<PaperIcon />}
-                color="green"
-              />
-              <SummaryCard
-                title="Total Searches"
-                value={searchHistory.length}
-                icon={<SearchIcon />}
-                color="purple"
-              />
-              <SummaryCard
-                title="Success Rate"
-                value={savedJobs.length > 0
-                  ? `${Math.round((savedJobs.filter(j => j.status === 'offered').length / savedJobs.length) * 100)}%`
-                  : '0%'
-                }
-                icon={<TrendIcon />}
-                color="orange"
-              />
-            </div>
+            </Button>
+          </Link>
+        </Column>
+      ) : (
+        <Column gap="32">
+          {/* Summary Stats */}
+          <Flex gap="24" wrap fillWidth>
+            <SummaryCard
+              title="Total Saved Jobs"
+              value={savedJobs.length}
+              icon={<BookmarkIcon />}
+              color="blue"
+            />
+            <SummaryCard
+              title="Applications Sent"
+              value={savedJobs.filter(j => j.status === 'applied').length}
+              icon={<PaperIcon />}
+              color="green"
+            />
+            <SummaryCard
+              title="Total Searches"
+              value={searchHistory.length}
+              icon={<SearchIcon />}
+              color="purple"
+            />
+            <SummaryCard
+              title="Success Rate"
+              value={savedJobs.length > 0
+                ? `${Math.round((savedJobs.filter(j => j.status === 'offered').length / savedJobs.length) * 100)}%`
+                : '0%'
+              }
+              icon={<TrendIcon />}
+              color="orange"
+            />
+          </Flex>
 
-            {/* Charts Grid */}
-            <div className="grid lg:grid-cols-2 gap-8 mb-8">
-              {/* Application Status */}
-              {analytics && analytics.statusDistribution.length > 0 && (
-                <div className="card p-6">
-                  <h3 className="text-lg font-semibold text-stone-900 mb-4">Application Status</h3>
-                  <div className="space-y-3">
-                    {analytics.statusDistribution.map(({ status, count }) => (
-                      <div key={status}>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span className="capitalize text-stone-600">{status}</span>
-                          <span className="font-medium text-stone-900">{count}</span>
-                        </div>
-                        <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
+          {/* Charts Grid */}
+          <Flex gap="24" wrap fillWidth>
+            {/* Application Status */}
+            {analytics && analytics.statusDistribution.length > 0 && (
+              <Column
+                padding="24"
+                gap="16"
+                radius="l"
+                border="neutral-alpha-weak"
+                background="surface"
+                className="glass-card"
+                style={{ flex: '1 1 400px', minWidth: 300 }}
+              >
+                <Text variant="heading-strong-m">Application Status</Text>
+                <Column gap="12">
+                  {analytics.statusDistribution.map(({ status, count }) => (
+                    <Column key={status} gap="4">
+                      <Flex horizontal="between">
+                        <Text variant="body-default-s" onBackground="neutral-weak" style={{ textTransform: 'capitalize' }}>
+                          {status}
+                        </Text>
+                        <Text variant="body-default-s" onBackground="neutral-strong">{count}</Text>
+                      </Flex>
+                      <div style={{
+                        height: 8,
+                        background: 'var(--neutral-alpha-weak)',
+                        borderRadius: 4,
+                        overflow: 'hidden'
+                      }}>
+                        <div
+                          style={{
+                            height: '100%',
+                            width: `${(count / savedJobs.length) * 100}%`,
+                            background: getStatusColor(status),
+                            borderRadius: 4,
+                          }}
+                        />
+                      </div>
+                    </Column>
+                  ))}
+                </Column>
+              </Column>
+            )}
+
+            {/* Weekly Activity */}
+            {analytics && (
+              <Column
+                padding="24"
+                gap="16"
+                radius="l"
+                border="neutral-alpha-weak"
+                background="surface"
+                className="glass-card"
+                style={{ flex: '1 1 400px', minWidth: 300 }}
+              >
+                <Text variant="heading-strong-m">Weekly Activity</Text>
+                <Flex vertical="end" horizontal="between" style={{ height: 160 }} gap="8">
+                  {analytics.activityByDay.map(({ date, searches, saves }) => {
+                    const maxVal = Math.max(...analytics.activityByDay.map(d => d.searches + d.saves), 1);
+                    return (
+                      <Column key={date} horizontal="center" style={{ flex: 1 }}>
+                        <Flex vertical="end" gap="2" style={{ height: 120, width: '100%' }}>
                           <div
-                            className={`h-full rounded-full ${getStatusColor(status)}`}
-                            style={{ width: `${(count / savedJobs.length) * 100}%` }}
+                            style={{
+                              flex: 1,
+                              background: 'var(--brand-solid-strong)',
+                              borderRadius: '4px 4px 0 0',
+                              height: `${(searches / maxVal) * 100}%`,
+                              minHeight: searches > 0 ? 4 : 0,
+                            }}
+                            title={`Searches: ${searches}`}
                           />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Weekly Activity */}
-              {analytics && (
-                <div className="card p-6">
-                  <h3 className="text-lg font-semibold text-stone-900 mb-4">Weekly Activity</h3>
-                  <div className="flex items-end justify-between h-40 gap-2">
-                    {analytics.activityByDay.map(({ date, searches, saves }) => {
-                      const maxVal = Math.max(...analytics.activityByDay.map(d => d.searches + d.saves), 1);
-                      const height = ((searches + saves) / maxVal) * 100;
-                      return (
-                        <div key={date} className="flex-1 flex flex-col items-center">
-                          <div className="w-full flex flex-col items-center" style={{ height: '120px' }}>
-                            <div className="w-full flex-1 flex items-end gap-0.5">
-                              <div
-                                className="flex-1 bg-brand-primary rounded-t"
-                                style={{ height: `${(searches / maxVal) * 100}%`, minHeight: searches > 0 ? '4px' : 0 }}
-                                title={`Searches: ${searches}`}
-                              />
-                              <div
-                                className="flex-1 bg-emerald-500 rounded-t"
-                                style={{ height: `${(saves / maxVal) * 100}%`, minHeight: saves > 0 ? '4px' : 0 }}
-                                title={`Saves: ${saves}`}
-                              />
-                            </div>
-                          </div>
-                          <span className="text-xs text-stone-500 mt-2">{date}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className="flex items-center justify-center gap-6 mt-4 text-sm">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-brand-primary rounded" />
-                      <span className="text-stone-600">Searches</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-emerald-500 rounded" />
-                      <span className="text-stone-600">Saves</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Top Locations */}
-              {analytics && analytics.locationDistribution.length > 0 && (
-                <div className="card p-6">
-                  <h3 className="text-lg font-semibold text-stone-900 mb-4">Top Locations</h3>
-                  <div className="space-y-3">
-                    {analytics.locationDistribution.map(({ location, count }, index) => (
-                      <div key={location} className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-stone-100 flex items-center justify-center text-sm font-medium text-stone-500">
-                          {index + 1}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between">
-                            <span className="text-stone-900">{location}</span>
-                            <span className="text-stone-500">{count} jobs</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Salary Distribution */}
-              {analytics && analytics.salaryRanges.some(r => r.count > 0) && (
-                <div className="card p-6">
-                  <h3 className="text-lg font-semibold text-stone-900 mb-4">Salary Distribution</h3>
-                  <div className="space-y-3">
-                    {analytics.salaryRanges.map(({ range, count }) => (
-                      <div key={range}>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span className="text-stone-600">{range}</span>
-                          <span className="font-medium text-stone-900">{count}</span>
-                        </div>
-                        <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-emerald-500 rounded-full"
-                            style={{ width: `${(count / savedJobs.length) * 100}%` }}
+                            style={{
+                              flex: 1,
+                              background: 'var(--success-solid-strong)',
+                              borderRadius: '4px 4px 0 0',
+                              height: `${(saves / maxVal) * 100}%`,
+                              minHeight: saves > 0 ? 4 : 0,
+                            }}
+                            title={`Saves: ${saves}`}
                           />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+                        </Flex>
+                        <Text variant="label-default-xs" onBackground="neutral-weak" style={{ marginTop: 8 }}>
+                          {date}
+                        </Text>
+                      </Column>
+                    );
+                  })}
+                </Flex>
+                <Flex horizontal="center" gap="24">
+                  <Flex gap="8" vertical="center">
+                    <div style={{ width: 12, height: 12, background: 'var(--brand-solid-strong)', borderRadius: 4 }} />
+                    <Text variant="body-default-s" onBackground="neutral-weak">Searches</Text>
+                  </Flex>
+                  <Flex gap="8" vertical="center">
+                    <div style={{ width: 12, height: 12, background: 'var(--success-solid-strong)', borderRadius: 4 }} />
+                    <Text variant="body-default-s" onBackground="neutral-weak">Saves</Text>
+                  </Flex>
+                </Flex>
+              </Column>
+            )}
 
-            {/* Bottom Section */}
-            <div className="grid lg:grid-cols-2 gap-8">
-              {/* Top Companies */}
-              {analytics && analytics.topCompanies.length > 0 && (
-                <div className="card p-6">
-                  <h3 className="text-lg font-semibold text-stone-900 mb-4">Top Companies</h3>
-                  <div className="space-y-3">
-                    {analytics.topCompanies.map(({ company, count }) => (
-                      <div key={company} className="flex items-center justify-between p-3 bg-stone-50 rounded-lg">
-                        <span className="font-medium text-stone-900">{company}</span>
-                        <span className="text-sm text-stone-500">{count} {count === 1 ? 'job' : 'jobs'}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Search Keywords */}
-              {analytics && analytics.searchKeywords.length > 0 && (
-                <div className="card p-6">
-                  <h3 className="text-lg font-semibold text-stone-900 mb-4">Top Search Keywords</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {analytics.searchKeywords.map(({ keyword, count }) => (
-                      <Link
-                        key={keyword}
-                        href={`/search?keyword=${encodeURIComponent(keyword)}`}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-brand-primary/10 text-brand-primary rounded-full hover:bg-brand-primary/20 transition-colors"
+            {/* Top Locations */}
+            {analytics && analytics.locationDistribution.length > 0 && (
+              <Column
+                padding="24"
+                gap="16"
+                radius="l"
+                border="neutral-alpha-weak"
+                background="surface"
+                className="glass-card"
+                style={{ flex: '1 1 400px', minWidth: 300 }}
+              >
+                <Text variant="heading-strong-m">Top Locations</Text>
+                <Column gap="12">
+                  {analytics.locationDistribution.map(({ location, count }, index) => (
+                    <Flex key={location} gap="12" vertical="center">
+                      <Flex
+                        style={{ width: 32, height: 32 }}
+                        radius="m"
+                        background="neutral-alpha-weak"
+                        horizontal="center"
+                        vertical="center"
                       >
-                        <span className="capitalize">{keyword}</span>
-                        <span className="text-xs bg-brand-primary text-white px-2 py-0.5 rounded-full">{count}</span>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
+                        <Text variant="label-default-s" onBackground="neutral-weak">{index + 1}</Text>
+                      </Flex>
+                      <Flex horizontal="between" fillWidth>
+                        <Text variant="body-default-s" onBackground="neutral-strong">{location}</Text>
+                        <Text variant="body-default-s" onBackground="neutral-weak">{count} jobs</Text>
+                      </Flex>
+                    </Flex>
+                  ))}
+                </Column>
+              </Column>
+            )}
+
+            {/* Salary Distribution */}
+            {analytics && analytics.salaryRanges.some(r => r.count > 0) && (
+              <Column
+                padding="24"
+                gap="16"
+                radius="l"
+                border="neutral-alpha-weak"
+                background="surface"
+                className="glass-card"
+                style={{ flex: '1 1 400px', minWidth: 300 }}
+              >
+                <Text variant="heading-strong-m">Salary Distribution</Text>
+                <Column gap="12">
+                  {analytics.salaryRanges.map(({ range, count }) => (
+                    <Column key={range} gap="4">
+                      <Flex horizontal="between">
+                        <Text variant="body-default-s" onBackground="neutral-weak">{range}</Text>
+                        <Text variant="body-default-s" onBackground="neutral-strong">{count}</Text>
+                      </Flex>
+                      <div style={{
+                        height: 8,
+                        background: 'var(--neutral-alpha-weak)',
+                        borderRadius: 4,
+                        overflow: 'hidden'
+                      }}>
+                        <div
+                          style={{
+                            height: '100%',
+                            width: `${(count / savedJobs.length) * 100}%`,
+                            background: 'var(--success-solid-strong)',
+                            borderRadius: 4,
+                          }}
+                        />
+                      </div>
+                    </Column>
+                  ))}
+                </Column>
+              </Column>
+            )}
+
+            {/* Top Companies */}
+            {analytics && analytics.topCompanies.length > 0 && (
+              <Column
+                padding="24"
+                gap="16"
+                radius="l"
+                border="neutral-alpha-weak"
+                background="surface"
+                className="glass-card"
+                style={{ flex: '1 1 400px', minWidth: 300 }}
+              >
+                <Text variant="heading-strong-m">Top Companies</Text>
+                <Column gap="12">
+                  {analytics.topCompanies.map(({ company, count }) => (
+                    <Flex
+                      key={company}
+                      padding="12"
+                      radius="m"
+                      background="neutral-alpha-weak"
+                      horizontal="between"
+                      vertical="center"
+                    >
+                      <Text variant="body-default-s" onBackground="neutral-strong">{company}</Text>
+                      <Text variant="body-default-s" onBackground="neutral-weak">
+                        {count} {count === 1 ? 'job' : 'jobs'}
+                      </Text>
+                    </Flex>
+                  ))}
+                </Column>
+              </Column>
+            )}
+
+            {/* Search Keywords */}
+            {analytics && analytics.searchKeywords.length > 0 && (
+              <Column
+                padding="24"
+                gap="16"
+                radius="l"
+                border="neutral-alpha-weak"
+                background="surface"
+                className="glass-card"
+                style={{ flex: '1 1 400px', minWidth: 300 }}
+              >
+                <Text variant="heading-strong-m">Top Search Keywords</Text>
+                <Flex gap="8" wrap>
+                  {analytics.searchKeywords.map(({ keyword, count }) => (
+                    <Link
+                      key={keyword}
+                      href={`/search?keyword=${encodeURIComponent(keyword)}`}
+                      style={{ textDecoration: 'none' }}
+                    >
+                      <Flex
+                        gap="8"
+                        vertical="center"
+                        padding="8"
+                        paddingX="12"
+                        radius="full"
+                        background="brand-alpha-weak"
+                        className="card-interactive"
+                      >
+                        <Text
+                          variant="body-default-s"
+                          onBackground="brand-strong"
+                          style={{ textTransform: 'capitalize' }}
+                        >
+                          {keyword}
+                        </Text>
+                        <Flex
+                          padding="2"
+                          paddingX="8"
+                          radius="full"
+                          background="brand-strong"
+                        >
+                          <Text variant="label-default-xs" onBackground="neutral-strong" style={{ color: 'white' }}>
+                            {count}
+                          </Text>
+                        </Flex>
+                      </Flex>
+                    </Link>
+                  ))}
+                </Flex>
+              </Column>
+            )}
+          </Flex>
+        </Column>
+      )}
+    </Column>
   );
 }
 
 function getStatusColor(status: string): string {
   switch (status) {
-    case 'saved': return 'bg-stone-400';
-    case 'applied': return 'bg-blue-500';
-    case 'interviewing': return 'bg-purple-500';
-    case 'offered': return 'bg-emerald-500';
-    case 'rejected': return 'bg-red-400';
-    default: return 'bg-stone-400';
+    case 'saved': return 'var(--neutral-solid-medium)';
+    case 'applied': return 'var(--brand-solid-strong)';
+    case 'interviewing': return 'var(--accent-solid-strong)';
+    case 'offered': return 'var(--success-solid-strong)';
+    case 'rejected': return 'var(--danger-solid-strong)';
+    default: return 'var(--neutral-solid-medium)';
   }
 }
 
@@ -425,32 +553,44 @@ function SummaryCard({ title, value, icon, color }: {
   icon: React.ReactNode;
   color: 'blue' | 'green' | 'purple' | 'orange';
 }) {
-  const colorClasses = {
-    blue: 'bg-blue-50 text-brand-primary',
-    green: 'bg-emerald-50 text-emerald-500',
-    purple: 'bg-purple-50 text-purple-500',
-    orange: 'bg-orange-50 text-orange-500',
+  const colorMap = {
+    blue: { bg: 'var(--brand-alpha-weak)', text: 'var(--brand-on-background-strong)' },
+    green: { bg: 'var(--success-alpha-weak)', text: 'var(--success-on-background-strong)' },
+    purple: { bg: 'var(--accent-alpha-weak)', text: 'var(--accent-on-background-strong)' },
+    orange: { bg: 'var(--warning-alpha-weak)', text: 'var(--warning-on-background-strong)' },
   };
 
   return (
-    <div className="card p-6">
-      <div className="flex items-center gap-4">
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${colorClasses[color]}`}>
+    <Column
+      padding="24"
+      radius="l"
+      border="neutral-alpha-weak"
+      background="surface"
+      className="glass-card"
+      style={{ flex: '1 1 200px', minWidth: 200 }}
+    >
+      <Flex gap="16" vertical="center">
+        <Flex
+          style={{ width: 48, height: 48, background: colorMap[color].bg, color: colorMap[color].text }}
+          radius="l"
+          horizontal="center"
+          vertical="center"
+        >
           {icon}
-        </div>
-        <div>
-          <p className="text-2xl font-bold text-stone-900">{value}</p>
-          <p className="text-sm text-stone-500">{title}</p>
-        </div>
-      </div>
-    </div>
+        </Flex>
+        <Column gap="4">
+          <Text variant="display-strong-s">{value}</Text>
+          <Text variant="body-default-s" onBackground="neutral-weak">{title}</Text>
+        </Column>
+      </Flex>
+    </Column>
   );
 }
 
 // Icons
-function ChartIcon({ className }: { className?: string }) {
+function ChartIcon({ style }: { style?: React.CSSProperties }) {
   return (
-    <svg className={className || "w-6 h-6"} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg style={style || { width: 24, height: 24 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
     </svg>
   );
@@ -458,7 +598,7 @@ function ChartIcon({ className }: { className?: string }) {
 
 function BookmarkIcon() {
   return (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg style={{ width: 24, height: 24 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
     </svg>
   );
@@ -466,7 +606,7 @@ function BookmarkIcon() {
 
 function PaperIcon() {
   return (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg style={{ width: 24, height: 24 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
     </svg>
   );
@@ -474,7 +614,7 @@ function PaperIcon() {
 
 function SearchIcon() {
   return (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg style={{ width: 24, height: 24 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
     </svg>
   );
@@ -482,7 +622,7 @@ function SearchIcon() {
 
 function TrendIcon() {
   return (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg style={{ width: 24, height: 24 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
     </svg>
   );

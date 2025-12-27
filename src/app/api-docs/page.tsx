@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { Column, Flex, Heading, Text, Button, Line } from '@once-ui-system/core';
 
 export default function ApiDocsPage() {
   const [activeTab, setActiveTab] = useState<'javascript' | 'python' | 'curl'>('javascript');
@@ -14,83 +15,101 @@ export default function ApiDocsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-stone-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
-          <aside className="lg:w-64 flex-shrink-0">
-            <div className="card p-6 sticky top-24">
-              <h2 className="text-lg font-semibold text-stone-900 mb-4">Documentation</h2>
-              <nav className="space-y-1">
-                <SidebarLink href="#introduction">Introduction</SidebarLink>
-                <SidebarLink href="#authentication">Authentication</SidebarLink>
-                <SidebarLink href="#endpoints">Endpoints</SidebarLink>
-                <SidebarLink href="#search">Search Jobs</SidebarLink>
-                <SidebarLink href="#parameters">Parameters</SidebarLink>
-                <SidebarLink href="#examples">Code Examples</SidebarLink>
-                <SidebarLink href="#errors">Error Handling</SidebarLink>
-                <SidebarLink href="#rate-limits">Rate Limits</SidebarLink>
-              </nav>
-            </div>
-          </aside>
+    <Column maxWidth="l" gap="xl" paddingY="xl" fillWidth>
+      <Flex gap="32" wrap>
+        {/* Sidebar */}
+        <Column
+          padding="24"
+          gap="16"
+          radius="l"
+          border="neutral-alpha-weak"
+          background="surface"
+          className="glass-card s-flex-hide"
+          style={{ flex: '0 0 240px', position: 'sticky', top: 100, alignSelf: 'flex-start' }}
+        >
+          <Text variant="heading-strong-m">Documentation</Text>
+          <Column gap="4">
+            <SidebarLink href="#introduction">Introduction</SidebarLink>
+            <SidebarLink href="#authentication">Authentication</SidebarLink>
+            <SidebarLink href="#endpoints">Endpoints</SidebarLink>
+            <SidebarLink href="#search">Search Jobs</SidebarLink>
+            <SidebarLink href="#parameters">Parameters</SidebarLink>
+            <SidebarLink href="#examples">Code Examples</SidebarLink>
+            <SidebarLink href="#errors">Error Handling</SidebarLink>
+            <SidebarLink href="#rate-limits">Rate Limits</SidebarLink>
+          </Column>
+        </Column>
 
-          {/* Main Content */}
-          <main className="flex-1 min-w-0">
-            {/* Introduction */}
-            <section id="introduction" className="mb-12">
-              <h1 className="text-3xl font-bold text-stone-900 mb-4">API Documentation</h1>
-              <p className="text-stone-600 mb-6">
-                Welcome to the JobSearch API! Our RESTful API allows you to integrate LinkedIn job search capabilities directly into your application.
-              </p>
-              <div className="card p-4 flex items-start gap-3 bg-blue-50 border-blue-200">
-                <span className="text-xl">ℹ️</span>
-                <div>
-                  <h3 className="font-semibold text-stone-900">Base URL</h3>
-                  <code className="text-sm bg-white px-2 py-1 rounded border border-stone-200">
-                    https://linkedin-jobs-search.vercel.app/api
-                  </code>
-                </div>
-              </div>
-            </section>
+        {/* Main Content */}
+        <Column gap="48" style={{ flex: '1 1 600px', minWidth: 0 }}>
+          {/* Introduction */}
+          <Column id="introduction" gap="16">
+            <Heading variant="display-strong-l">API Documentation</Heading>
+            <Text variant="body-default-l" onBackground="neutral-weak">
+              Welcome to the JobSearch API! Our RESTful API allows you to integrate LinkedIn job search capabilities directly into your application.
+            </Text>
+            <Flex
+              padding="16"
+              gap="12"
+              radius="l"
+              background="info-alpha-weak"
+              border="info-alpha-medium"
+              vertical="center"
+            >
+              <Text variant="body-default-l">ℹ️</Text>
+              <Column gap="4">
+                <Text variant="heading-strong-s">Base URL</Text>
+                <Flex
+                  padding="8"
+                  paddingX="12"
+                  radius="m"
+                  background="surface"
+                  border="neutral-alpha-weak"
+                >
+                  <code style={{ fontSize: 14 }}>https://linkedin-jobs-search.vercel.app/api</code>
+                </Flex>
+              </Column>
+            </Flex>
+          </Column>
 
-            {/* Authentication */}
-            <section id="authentication" className="mb-12">
-              <h2 className="text-2xl font-bold text-stone-900 mb-4">Authentication</h2>
-              <p className="text-stone-600 mb-4">
-                Currently, the API does not require authentication for basic usage. Premium features require an API key.
-              </p>
-              <CodeBlock
-                code={`// Include API key in headers (for premium users)
+          {/* Authentication */}
+          <Column id="authentication" gap="16">
+            <Heading variant="heading-strong-l">Authentication</Heading>
+            <Text variant="body-default-m" onBackground="neutral-weak">
+              Currently, the API does not require authentication for basic usage. Premium features require an API key.
+            </Text>
+            <CodeBlock
+              code={`// Include API key in headers (for premium users)
 headers: {
   'Authorization': 'Bearer YOUR_API_KEY',
   'Content-Type': 'application/json'
 }`}
-                id="auth-code"
-                copiedCode={copiedCode}
-                onCopy={copyCode}
-              />
-            </section>
+              id="auth-code"
+              copiedCode={copiedCode}
+              onCopy={copyCode}
+            />
+          </Column>
 
-            {/* Endpoints */}
-            <section id="endpoints" className="mb-12">
-              <h2 className="text-2xl font-bold text-stone-900 mb-4">Available Endpoints</h2>
-              <div className="space-y-3">
-                <EndpointCard method="GET" path="/api" description="Health check and API information" />
-                <EndpointCard method="POST" path="/api/jobs/search" description="Search for jobs with advanced filters" />
-                <EndpointCard method="GET" path="/api/geo-stats" description="Get GEO monitoring statistics" />
-              </div>
-            </section>
+          {/* Endpoints */}
+          <Column id="endpoints" gap="16">
+            <Heading variant="heading-strong-l">Available Endpoints</Heading>
+            <Column gap="12">
+              <EndpointCard method="GET" path="/api" description="Health check and API information" />
+              <EndpointCard method="POST" path="/api/jobs/search" description="Search for jobs with advanced filters" />
+              <EndpointCard method="GET" path="/api/geo-stats" description="Get GEO monitoring statistics" />
+            </Column>
+          </Column>
 
-            {/* Search Endpoint */}
-            <section id="search" className="mb-12">
-              <h2 className="text-2xl font-bold text-stone-900 mb-4">POST /api/jobs/search</h2>
-              <p className="text-stone-600 mb-6">
-                Search for jobs with comprehensive filtering options.
-              </p>
+          {/* Search Endpoint */}
+          <Column id="search" gap="16">
+            <Heading variant="heading-strong-l">POST /api/jobs/search</Heading>
+            <Text variant="body-default-m" onBackground="neutral-weak">
+              Search for jobs with comprehensive filtering options.
+            </Text>
 
-              <h3 className="text-lg font-semibold text-stone-900 mb-3">Request Body</h3>
-              <CodeBlock
-                code={`{
+            <Text variant="heading-strong-m">Request Body</Text>
+            <CodeBlock
+              code={`{
   "keyword": "software engineer",
   "location": "San Francisco",
   "dateSincePosted": "past week",
@@ -102,14 +121,14 @@ headers: {
   "limit": "10",
   "page": "0"
 }`}
-                id="request-body"
-                copiedCode={copiedCode}
-                onCopy={copyCode}
-              />
+              id="request-body"
+              copiedCode={copiedCode}
+              onCopy={copyCode}
+            />
 
-              <h3 className="text-lg font-semibold text-stone-900 mb-3 mt-6">Response</h3>
-              <CodeBlock
-                code={`{
+            <Text variant="heading-strong-m">Response</Text>
+            <CodeBlock
+              code={`{
   "success": true,
   "data": [
     {
@@ -127,61 +146,61 @@ headers: {
   "page": 0,
   "limit": 10
 }`}
-                id="response-body"
-                copiedCode={copiedCode}
-                onCopy={copyCode}
-              />
-            </section>
+              id="response-body"
+              copiedCode={copiedCode}
+              onCopy={copyCode}
+            />
+          </Column>
 
-            {/* Parameters */}
-            <section id="parameters" className="mb-12">
-              <h2 className="text-2xl font-bold text-stone-900 mb-4">Search Parameters</h2>
-              <div className="card overflow-hidden">
-                <table className="w-full">
-                  <thead className="bg-stone-100">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-stone-900">Parameter</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-stone-900">Type</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-stone-900">Description</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-stone-900">Example</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-stone-200">
-                    <ParamRow param="keyword" type="string" desc="Job title or skills to search" example='"software developer"' />
-                    <ParamRow param="location" type="string" desc='City, state, or "Remote"' example='"New York"' />
-                    <ParamRow param="dateSincePosted" type="string" desc="Time filter" example='"past week", "24hr"' />
-                    <ParamRow param="salary" type="string" desc="Minimum salary" example='"80000", "100000"' />
-                    <ParamRow param="jobType" type="string" desc="Employment type" example='"full time", "contract"' />
-                    <ParamRow param="remoteFilter" type="string" desc="Work location type" example='"remote", "hybrid"' />
-                    <ParamRow param="experienceLevel" type="string" desc="Required experience" example='"senior", "entry level"' />
-                    <ParamRow param="sortBy" type="string" desc="Sort order" example='"recent", "relevant"' />
-                    <ParamRow param="limit" type="string" desc="Results per page" example='"10", "50"' />
-                    <ParamRow param="page" type="string" desc="Page number (0-indexed)" example='"0", "1"' />
-                  </tbody>
-                </table>
-              </div>
-            </section>
+          {/* Parameters */}
+          <Column id="parameters" gap="16">
+            <Heading variant="heading-strong-l">Search Parameters</Heading>
+            <Column
+              radius="l"
+              border="neutral-alpha-weak"
+              background="surface"
+              className="glass-card"
+              style={{ overflow: 'hidden' }}
+            >
+              <Flex padding="16" background="neutral-alpha-weak">
+                <Flex style={{ flex: 2 }}><Text variant="label-strong-s">Parameter</Text></Flex>
+                <Flex style={{ flex: 1 }}><Text variant="label-strong-s">Type</Text></Flex>
+                <Flex style={{ flex: 3 }}><Text variant="label-strong-s">Description</Text></Flex>
+                <Flex style={{ flex: 2 }} className="s-flex-hide"><Text variant="label-strong-s">Example</Text></Flex>
+              </Flex>
+              <ParamRow param="keyword" type="string" desc="Job title or skills to search" example='"software developer"' />
+              <ParamRow param="location" type="string" desc='City, state, or "Remote"' example='"New York"' />
+              <ParamRow param="dateSincePosted" type="string" desc="Time filter" example='"past week", "24hr"' />
+              <ParamRow param="salary" type="string" desc="Minimum salary" example='"80000", "100000"' />
+              <ParamRow param="jobType" type="string" desc="Employment type" example='"full time", "contract"' />
+              <ParamRow param="remoteFilter" type="string" desc="Work location type" example='"remote", "hybrid"' />
+              <ParamRow param="experienceLevel" type="string" desc="Required experience" example='"senior", "entry level"' />
+              <ParamRow param="sortBy" type="string" desc="Sort order" example='"recent", "relevant"' />
+              <ParamRow param="limit" type="string" desc="Results per page" example='"10", "50"' />
+              <ParamRow param="page" type="string" desc="Page number (0-indexed)" example='"0", "1"' />
+            </Column>
+          </Column>
 
-            {/* Code Examples */}
-            <section id="examples" className="mb-12">
-              <h2 className="text-2xl font-bold text-stone-900 mb-4">Code Examples</h2>
+          {/* Code Examples */}
+          <Column id="examples" gap="16">
+            <Heading variant="heading-strong-l">Code Examples</Heading>
 
-              {/* Language Tabs */}
-              <div className="flex gap-2 mb-4">
-                <TabButton active={activeTab === 'javascript'} onClick={() => setActiveTab('javascript')}>
-                  JavaScript
-                </TabButton>
-                <TabButton active={activeTab === 'python'} onClick={() => setActiveTab('python')}>
-                  Python
-                </TabButton>
-                <TabButton active={activeTab === 'curl'} onClick={() => setActiveTab('curl')}>
-                  cURL
-                </TabButton>
-              </div>
+            {/* Language Tabs */}
+            <Flex gap="8">
+              <TabButton active={activeTab === 'javascript'} onClick={() => setActiveTab('javascript')}>
+                JavaScript
+              </TabButton>
+              <TabButton active={activeTab === 'python'} onClick={() => setActiveTab('python')}>
+                Python
+              </TabButton>
+              <TabButton active={activeTab === 'curl'} onClick={() => setActiveTab('curl')}>
+                cURL
+              </TabButton>
+            </Flex>
 
-              {activeTab === 'javascript' && (
-                <CodeBlock
-                  code={`// Fetch API example
+            {activeTab === 'javascript' && (
+              <CodeBlock
+                code={`// Fetch API example
 const searchJobs = async () => {
   const response = await fetch('https://linkedin-jobs-search.vercel.app/api/jobs/search', {
     method: 'POST',
@@ -202,15 +221,15 @@ const searchJobs = async () => {
 };
 
 searchJobs();`}
-                  id="js-example"
-                  copiedCode={copiedCode}
-                  onCopy={copyCode}
-                />
-              )}
+                id="js-example"
+                copiedCode={copiedCode}
+                onCopy={copyCode}
+              />
+            )}
 
-              {activeTab === 'python' && (
-                <CodeBlock
-                  code={`import requests
+            {activeTab === 'python' && (
+              <CodeBlock
+                code={`import requests
 
 url = 'https://linkedin-jobs-search.vercel.app/api/jobs/search'
 
@@ -226,15 +245,15 @@ response = requests.post(url, json=payload)
 data = response.json()
 
 print(data)`}
-                  id="py-example"
-                  copiedCode={copiedCode}
-                  onCopy={copyCode}
-                />
-              )}
+                id="py-example"
+                copiedCode={copiedCode}
+                onCopy={copyCode}
+              />
+            )}
 
-              {activeTab === 'curl' && (
-                <CodeBlock
-                  code={`curl -X POST https://linkedin-jobs-search.vercel.app/api/jobs/search \\
+            {activeTab === 'curl' && (
+              <CodeBlock
+                code={`curl -X POST https://linkedin-jobs-search.vercel.app/api/jobs/search \\
   -H "Content-Type: application/json" \\
   -d '{
     "keyword": "frontend developer",
@@ -243,80 +262,93 @@ print(data)`}
     "salary": "100000",
     "limit": "20"
   }'`}
-                  id="curl-example"
-                  copiedCode={copiedCode}
-                  onCopy={copyCode}
-                />
-              )}
-            </section>
+                id="curl-example"
+                copiedCode={copiedCode}
+                onCopy={copyCode}
+              />
+            )}
+          </Column>
 
-            {/* Errors */}
-            <section id="errors" className="mb-12">
-              <h2 className="text-2xl font-bold text-stone-900 mb-4">Error Handling</h2>
-              <p className="text-stone-600 mb-6">
-                The API uses standard HTTP status codes to indicate success or failure.
-              </p>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <ErrorCard code="200" title="OK" description="Request successful" color="green" />
-                <ErrorCard code="400" title="Bad Request" description="Invalid parameters" color="yellow" />
-                <ErrorCard code="429" title="Too Many Requests" description="Rate limit exceeded" color="orange" />
-                <ErrorCard code="500" title="Server Error" description="Internal server error" color="red" />
-              </div>
-            </section>
+          {/* Errors */}
+          <Column id="errors" gap="16">
+            <Heading variant="heading-strong-l">Error Handling</Heading>
+            <Text variant="body-default-m" onBackground="neutral-weak">
+              The API uses standard HTTP status codes to indicate success or failure.
+            </Text>
+            <Flex gap="16" wrap fillWidth>
+              <ErrorCard code="200" title="OK" description="Request successful" color="success" />
+              <ErrorCard code="400" title="Bad Request" description="Invalid parameters" color="warning" />
+              <ErrorCard code="429" title="Too Many Requests" description="Rate limit exceeded" color="warning" />
+              <ErrorCard code="500" title="Server Error" description="Internal server error" color="danger" />
+            </Flex>
+          </Column>
 
-            {/* Rate Limits */}
-            <section id="rate-limits" className="mb-12">
-              <h2 className="text-2xl font-bold text-stone-900 mb-4">Rate Limits</h2>
-              <p className="text-stone-600 mb-6">
-                To ensure fair usage, API requests are rate limited based on your plan.
-              </p>
+          {/* Rate Limits */}
+          <Column id="rate-limits" gap="16">
+            <Heading variant="heading-strong-l">Rate Limits</Heading>
+            <Text variant="body-default-m" onBackground="neutral-weak">
+              To ensure fair usage, API requests are rate limited based on your plan.
+            </Text>
 
-              <div className="card overflow-hidden mb-8">
-                <table className="w-full">
-                  <thead className="bg-stone-100">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-stone-900">Plan</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-stone-900">Requests</th>
-                      <th className="px-4 py-3 text-left text-sm font-semibold text-stone-900">Window</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-stone-200">
-                    <tr>
-                      <td className="px-4 py-3 font-medium text-stone-900">Free</td>
-                      <td className="px-4 py-3 text-stone-600">100 requests</td>
-                      <td className="px-4 py-3 text-stone-600">per 15 minutes</td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-3 font-medium text-stone-900">Pro</td>
-                      <td className="px-4 py-3 text-stone-600">1000 requests</td>
-                      <td className="px-4 py-3 text-stone-600">per 15 minutes</td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-3 font-medium text-stone-900">Enterprise</td>
-                      <td className="px-4 py-3 text-stone-600">Custom</td>
-                      <td className="px-4 py-3 text-stone-600">-</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+            <Column
+              radius="l"
+              border="neutral-alpha-weak"
+              background="surface"
+              className="glass-card"
+              style={{ overflow: 'hidden' }}
+            >
+              <Flex padding="16" background="neutral-alpha-weak">
+                <Flex style={{ flex: 1 }}><Text variant="label-strong-s">Plan</Text></Flex>
+                <Flex style={{ flex: 1 }}><Text variant="label-strong-s">Requests</Text></Flex>
+                <Flex style={{ flex: 1 }}><Text variant="label-strong-s">Window</Text></Flex>
+              </Flex>
+              <Flex padding="16" border="neutral-alpha-weak" style={{ borderWidth: '1px 0 0 0' }}>
+                <Flex style={{ flex: 1 }}><Text variant="body-default-s" onBackground="neutral-strong">Free</Text></Flex>
+                <Flex style={{ flex: 1 }}><Text variant="body-default-s" onBackground="neutral-weak">100 requests</Text></Flex>
+                <Flex style={{ flex: 1 }}><Text variant="body-default-s" onBackground="neutral-weak">per 15 minutes</Text></Flex>
+              </Flex>
+              <Flex padding="16" border="neutral-alpha-weak" style={{ borderWidth: '1px 0 0 0' }}>
+                <Flex style={{ flex: 1 }}><Text variant="body-default-s" onBackground="neutral-strong">Pro</Text></Flex>
+                <Flex style={{ flex: 1 }}><Text variant="body-default-s" onBackground="neutral-weak">1000 requests</Text></Flex>
+                <Flex style={{ flex: 1 }}><Text variant="body-default-s" onBackground="neutral-weak">per 15 minutes</Text></Flex>
+              </Flex>
+              <Flex padding="16" border="neutral-alpha-weak" style={{ borderWidth: '1px 0 0 0' }}>
+                <Flex style={{ flex: 1 }}><Text variant="body-default-s" onBackground="neutral-strong">Enterprise</Text></Flex>
+                <Flex style={{ flex: 1 }}><Text variant="body-default-s" onBackground="neutral-weak">Custom</Text></Flex>
+                <Flex style={{ flex: 1 }}><Text variant="body-default-s" onBackground="neutral-weak">-</Text></Flex>
+              </Flex>
+            </Column>
 
-              <div className="card p-6 bg-gradient-to-r from-brand-primary to-brand-secondary text-white">
-                <h3 className="text-xl font-bold mb-2">Need higher limits?</h3>
-                <p className="text-white/80 mb-4">Upgrade to Pro or contact us for Enterprise pricing.</p>
-                <div className="flex gap-3">
-                  <Link href="/pricing" className="px-4 py-2 bg-white text-brand-primary font-semibold rounded-lg hover:bg-stone-100 transition-colors">
+            <Flex
+              padding="24"
+              gap="16"
+              radius="l"
+              background="brand-strong"
+              style={{ flexDirection: 'column' }}
+            >
+              <Column gap="8">
+                <Heading variant="heading-strong-m" style={{ color: 'white' }}>Need higher limits?</Heading>
+                <Text variant="body-default-m" style={{ color: 'rgba(255,255,255,0.8)' }}>
+                  Upgrade to Pro or contact us for Enterprise pricing.
+                </Text>
+              </Column>
+              <Flex gap="12" wrap>
+                <Link href="/pricing" style={{ textDecoration: 'none' }}>
+                  <Button variant="secondary" size="m">
                     View Pricing
-                  </Link>
-                  <a href="mailto:chanmeng.dev@gmail.com" className="px-4 py-2 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-colors">
+                  </Button>
+                </Link>
+                <a href="mailto:chanmeng.dev@gmail.com" style={{ textDecoration: 'none' }}>
+                  <Button variant="tertiary" size="m" style={{ borderColor: 'white', color: 'white' }}>
                     Contact Sales
-                  </a>
-                </div>
-              </div>
-            </section>
-          </main>
-        </div>
-      </div>
-    </div>
+                  </Button>
+                </a>
+              </Flex>
+            </Flex>
+          </Column>
+        </Column>
+      </Flex>
+    </Column>
   );
 }
 
@@ -324,29 +356,51 @@ function SidebarLink({ href, children }: { href: string; children: React.ReactNo
   return (
     <a
       href={href}
-      className="block px-3 py-2 text-sm text-stone-600 hover:text-brand-primary hover:bg-blue-50 rounded-lg transition-colors"
+      style={{ textDecoration: 'none' }}
     >
-      {children}
+      <Flex
+        padding="8"
+        paddingX="12"
+        radius="m"
+        className="card-interactive"
+      >
+        <Text variant="body-default-s" onBackground="neutral-weak">
+          {children}
+        </Text>
+      </Flex>
     </a>
   );
 }
 
 function EndpointCard({ method, path, description }: { method: string; path: string; description: string }) {
-  const methodColors = {
-    GET: 'bg-emerald-100 text-emerald-700',
-    POST: 'bg-blue-100 text-blue-700',
+  const methodColors: Record<string, { bg: string; text: string }> = {
+    GET: { bg: 'var(--success-alpha-medium)', text: 'var(--success-on-background-strong)' },
+    POST: { bg: 'var(--brand-alpha-medium)', text: 'var(--brand-on-background-strong)' },
   };
 
   return (
-    <div className="card p-4 flex items-center gap-4">
-      <span className={`px-3 py-1 text-xs font-bold rounded ${methodColors[method as keyof typeof methodColors]}`}>
-        {method}
-      </span>
-      <div>
-        <code className="text-stone-900 font-medium">{path}</code>
-        <p className="text-sm text-stone-500">{description}</p>
-      </div>
-    </div>
+    <Flex
+      padding="16"
+      gap="16"
+      radius="l"
+      border="neutral-alpha-weak"
+      background="surface"
+      className="glass-card"
+      vertical="center"
+    >
+      <Flex
+        padding="4"
+        paddingX="12"
+        radius="m"
+        style={{ background: methodColors[method]?.bg, color: methodColors[method]?.text }}
+      >
+        <Text variant="label-strong-xs">{method}</Text>
+      </Flex>
+      <Column gap="2">
+        <code style={{ fontWeight: 500, color: 'var(--neutral-on-background-strong)' }}>{path}</code>
+        <Text variant="body-default-s" onBackground="neutral-weak">{description}</Text>
+      </Column>
+    </Flex>
   );
 }
 
@@ -357,21 +411,38 @@ function CodeBlock({ code, id, copiedCode, onCopy }: {
   onCopy: (code: string, id: string) => void;
 }) {
   return (
-    <div className="relative">
+    <Column style={{ position: 'relative' }}>
       <button
         onClick={() => onCopy(code, id)}
-        className={`absolute top-3 right-3 px-3 py-1 text-xs font-medium rounded transition-colors ${
-          copiedCode === id
-            ? 'bg-emerald-100 text-emerald-700'
-            : 'bg-stone-700 text-stone-300 hover:bg-stone-600'
-        }`}
+        style={{
+          position: 'absolute',
+          top: 12,
+          right: 12,
+          padding: '4px 12px',
+          fontSize: 12,
+          fontWeight: 500,
+          borderRadius: 6,
+          border: 'none',
+          cursor: 'pointer',
+          background: copiedCode === id ? 'var(--success-alpha-medium)' : 'var(--neutral-alpha-medium)',
+          color: copiedCode === id ? 'var(--success-on-background-strong)' : 'var(--neutral-on-background-weak)',
+          transition: 'all 0.2s',
+        }}
       >
         {copiedCode === id ? 'Copied!' : 'Copy'}
       </button>
-      <pre className="bg-stone-800 text-stone-100 p-4 rounded-xl overflow-x-auto text-sm">
+      <pre style={{
+        background: 'var(--neutral-solid-strong)',
+        color: 'var(--static-white)',
+        padding: 16,
+        borderRadius: 12,
+        overflow: 'auto',
+        fontSize: 14,
+        margin: 0,
+      }}>
         <code>{code}</code>
       </pre>
-    </div>
+    </Column>
   );
 }
 
@@ -382,14 +453,27 @@ function ParamRow({ param, type, desc, example }: {
   example: string;
 }) {
   return (
-    <tr>
-      <td className="px-4 py-3">
-        <code className="text-sm bg-stone-100 px-2 py-1 rounded">{param}</code>
-      </td>
-      <td className="px-4 py-3 text-sm text-stone-600">{type}</td>
-      <td className="px-4 py-3 text-sm text-stone-600">{desc}</td>
-      <td className="px-4 py-3 text-sm text-stone-500">{example}</td>
-    </tr>
+    <Flex
+      padding="16"
+      border="neutral-alpha-weak"
+      style={{ borderWidth: '1px 0 0 0' }}
+      vertical="center"
+    >
+      <Flex style={{ flex: 2 }}>
+        <Flex padding="4" paddingX="8" radius="m" background="neutral-alpha-weak">
+          <code style={{ fontSize: 13 }}>{param}</code>
+        </Flex>
+      </Flex>
+      <Flex style={{ flex: 1 }}>
+        <Text variant="body-default-s" onBackground="neutral-weak">{type}</Text>
+      </Flex>
+      <Flex style={{ flex: 3 }}>
+        <Text variant="body-default-s" onBackground="neutral-weak">{desc}</Text>
+      </Flex>
+      <Flex style={{ flex: 2 }} className="s-flex-hide">
+        <Text variant="body-default-s" onBackground="neutral-weak">{example}</Text>
+      </Flex>
+    </Flex>
   );
 }
 
@@ -401,11 +485,17 @@ function TabButton({ active, onClick, children }: {
   return (
     <button
       onClick={onClick}
-      className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-        active
-          ? 'bg-brand-primary text-white'
-          : 'bg-stone-200 text-stone-600 hover:bg-stone-300'
-      }`}
+      style={{
+        padding: '8px 16px',
+        fontSize: 14,
+        fontWeight: 500,
+        borderRadius: 8,
+        border: 'none',
+        cursor: 'pointer',
+        background: active ? 'var(--brand-solid-strong)' : 'var(--neutral-alpha-weak)',
+        color: active ? 'white' : 'var(--neutral-on-background-weak)',
+        transition: 'all 0.2s',
+      }}
     >
       {children}
     </button>
@@ -416,24 +506,37 @@ function ErrorCard({ code, title, description, color }: {
   code: string;
   title: string;
   description: string;
-  color: 'green' | 'yellow' | 'orange' | 'red';
+  color: 'success' | 'warning' | 'danger';
 }) {
-  const colorClasses = {
-    green: 'bg-emerald-100 text-emerald-700',
-    yellow: 'bg-yellow-100 text-yellow-700',
-    orange: 'bg-orange-100 text-orange-700',
-    red: 'bg-red-100 text-red-700',
+  const colorMap = {
+    success: { bg: 'var(--success-alpha-weak)', text: 'var(--success-on-background-strong)' },
+    warning: { bg: 'var(--warning-alpha-weak)', text: 'var(--warning-on-background-strong)' },
+    danger: { bg: 'var(--danger-alpha-weak)', text: 'var(--danger-on-background-strong)' },
   };
 
   return (
-    <div className="card p-4 flex items-center gap-4">
-      <span className={`px-3 py-2 text-lg font-bold rounded ${colorClasses[color]}`}>
-        {code}
-      </span>
-      <div>
-        <h4 className="font-semibold text-stone-900">{title}</h4>
-        <p className="text-sm text-stone-500">{description}</p>
-      </div>
-    </div>
+    <Flex
+      padding="16"
+      gap="16"
+      radius="l"
+      border="neutral-alpha-weak"
+      background="surface"
+      className="glass-card"
+      vertical="center"
+      style={{ flex: '1 1 200px', minWidth: 200 }}
+    >
+      <Flex
+        padding="8"
+        paddingX="12"
+        radius="m"
+        style={{ background: colorMap[color].bg, color: colorMap[color].text }}
+      >
+        <Text variant="heading-strong-m">{code}</Text>
+      </Flex>
+      <Column gap="2">
+        <Text variant="heading-strong-s">{title}</Text>
+        <Text variant="body-default-s" onBackground="neutral-weak">{description}</Text>
+      </Column>
+    </Flex>
   );
 }

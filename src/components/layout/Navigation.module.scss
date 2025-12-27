@@ -1,17 +1,40 @@
+@use "../breakpoints.scss" as breakpoints;
+
+// 导航栏定位 - 桌面sticky顶部，移动端fixed底部
 .position {
   position: sticky;
   top: 0;
 }
 
+// 导航容器样式
 .navContainer {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
-@media (max-width: 768px) {
+// 遮罩渐变效果
+.mask {
+  pointer-events: none;
+  backdrop-filter: blur(0.5rem);
+  background: linear-gradient(to bottom, var(--page-background), var(--static-transparent));
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 0) 100%);
+  mask-size: 100% 100%;
+}
+
+// 移动端样式
+@media (max-width: breakpoints.$s) {
   .position {
     top: auto;
     position: fixed;
     bottom: var(--static-space-24, 24px);
+  }
+
+  .mask {
+    transform: rotate(180deg);
+    bottom: 0;
+  }
+
+  .navContainer {
+    padding: var(--static-space-8);
   }
 }

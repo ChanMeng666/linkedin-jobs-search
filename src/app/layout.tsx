@@ -4,9 +4,8 @@ import '@/resources/custom.css';
 import './globals.css';
 
 import type { Metadata } from 'next';
-import Script from 'next/script';
-import { Suspense } from 'react';
 import classNames from 'classnames';
+import { Suspense } from 'react';
 
 import { Background, Column, Flex, opacity, SpacingToken } from '@once-ui-system/core';
 import { StackProvider } from '@/components/providers/StackProvider';
@@ -15,44 +14,31 @@ import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import { fonts, style, effects, dataStyle, home } from '@/resources';
 
-export const dynamic = 'force-dynamic';
-
+// Navigation加载骨架屏
 function NavigationSkeleton() {
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: '16px',
-        left: 0,
-        right: 0,
-        display: 'flex',
-        justifyContent: 'center',
-        padding: '8px',
-        zIndex: 9,
-      }}
+    <Flex
+      fitHeight
+      as="header"
+      zIndex={9}
+      fillWidth
+      padding="8"
+      horizontal="center"
     >
-      <div
-        style={{
-          maxWidth: '1200px',
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          padding: '8px',
-          borderRadius: '12px',
-          border: '1px solid var(--neutral-alpha-weak)',
-          background: 'rgba(255, 255, 255, 0.8)',
-          backdropFilter: 'blur(12px)',
-        }}
-      >
-        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-          <div style={{ width: 40, height: 40, background: 'var(--neutral-alpha-weak)', borderRadius: 8 }} />
-          <div style={{ width: 80, height: 20, background: 'var(--neutral-alpha-weak)', borderRadius: 4 }} />
-          <div style={{ width: 80, height: 20, background: 'var(--neutral-alpha-weak)', borderRadius: 4 }} />
-        </div>
-      </div>
-    </div>
+      <Flex
+        background="surface"
+        border="neutral-alpha-weak"
+        radius="m-4"
+        shadow="l"
+        padding="4"
+        horizontal="center"
+        style={{ width: 300, height: 40 }}
+      />
+    </Flex>
   );
 }
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: home.title,
@@ -62,7 +48,7 @@ export const metadata: Metadata = {
   },
 };
 
-// Theme initialization script content
+// 主题初始化脚本 - 防止闪烁
 const themeInitScript = `
 (function() {
   try {
@@ -126,31 +112,22 @@ export default function RootLayout({
       )}
     >
       <head>
-        <Script
+        <script
           id="theme-init"
-          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: themeInitScript }}
         />
       </head>
-      <body
-        style={{
-          margin: 0,
-          padding: 0,
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+      <body style={{ margin: 0, padding: 0 }}>
         <StackProvider>
           <Providers>
-            <Flex
-              fillWidth
-              direction="column"
+            {/* 使用Column作为body容器 - 参考chanmeng项目 */}
+            <Column
               background="page"
+              fillWidth
               style={{ minHeight: '100vh' }}
               horizontal="center"
             >
-              {/* Global Background with Dot Pattern */}
+              {/* 全局背景效果 */}
               <Background
                 position="fixed"
                 mask={{
@@ -193,15 +170,15 @@ export default function RootLayout({
                 }}
               />
 
-              {/* Spacer for fixed navigation */}
+              {/* 导航栏上方间距 - 仅桌面显示 */}
               <Flex fillWidth minHeight="16" className="s-flex-hide" />
 
-              {/* Navigation */}
+              {/* 导航栏 - 包装在Suspense中以支持useUser hook */}
               <Suspense fallback={<NavigationSkeleton />}>
                 <Navigation />
               </Suspense>
 
-              {/* Main Content */}
+              {/* 主内容区 */}
               <Flex
                 zIndex={0}
                 fillWidth
@@ -214,9 +191,9 @@ export default function RootLayout({
                 </Flex>
               </Flex>
 
-              {/* Footer */}
+              {/* 页脚 */}
               <Footer />
-            </Flex>
+            </Column>
           </Providers>
         </StackProvider>
       </body>

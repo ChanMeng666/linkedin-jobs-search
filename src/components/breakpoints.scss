@@ -1,0 +1,29 @@
+// Responsive breakpoints - 参考chanmeng项目
+// $s: 小屏幕 (手机)
+// $m: 中等屏幕 (平板)
+// $l: 大屏幕 (桌面)
+
+$s: 768px;
+$m: 1024px;
+$l: 1440px;
+
+// 小屏幕媒体查询 mixin
+@mixin s {
+  @media (max-width: #{$s}) {
+    @content;
+  }
+}
+
+// 中等屏幕媒体查询 mixin
+@mixin m {
+  @media (max-width: #{$m}) {
+    @content;
+  }
+}
+
+// 大屏幕媒体查询 mixin
+@mixin l {
+  @media (max-width: #{$l}) {
+    @content;
+  }
+}

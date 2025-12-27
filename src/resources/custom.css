@@ -227,3 +227,83 @@ button {
   align-items: center !important;
   gap: 8px !important;
 }
+
+/* ============================================
+   响应式显示工具类 - 参考chanmeng项目
+   ============================================ */
+
+/* s-flex-hide: 小屏幕隐藏 (768px以下) */
+@media (max-width: 768px) {
+  .s-flex-hide {
+    display: none !important;
+  }
+}
+
+/* s-flex-show: 仅小屏幕显示 */
+.s-flex-show {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .s-flex-show {
+    display: flex !important;
+  }
+}
+
+/* m-flex-hide: 中等屏幕隐藏 (1024px以下) */
+@media (max-width: 1024px) {
+  .m-flex-hide {
+    display: none !important;
+  }
+}
+
+/* m-flex-show: 仅中等屏幕显示 */
+.m-flex-show {
+  display: none !important;
+}
+
+@media (max-width: 1024px) {
+  .m-flex-show {
+    display: flex !important;
+  }
+}
+
+/* l-flex-hide: 大屏幕隐藏 (1440px以下) */
+@media (max-width: 1440px) {
+  .l-flex-hide {
+    display: none !important;
+  }
+}
+
+/* l-flex-show: 仅大屏幕显示 */
+.l-flex-show {
+  display: none !important;
+}
+
+@media (min-width: 1025px) {
+  .l-flex-show {
+    display: flex !important;
+  }
+}
+
+/* ============================================
+   Footer响应式样式
+   ============================================ */
+
+@media (max-width: 768px) {
+  .footer-top {
+    flex-direction: column !important;
+    gap: 32px !important;
+  }
+
+  .footer-links {
+    flex-direction: column !important;
+    gap: 24px !important;
+  }
+
+  .footer-bottom {
+    flex-direction: column !important;
+    gap: 16px !important;
+    text-align: center;
+  }
+}

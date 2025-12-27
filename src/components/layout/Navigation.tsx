@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useUser } from '@stackframe/stack';
-import { Fade, Flex, Line, ToggleButton, Avatar, Text } from '@once-ui-system/core';
+import { Flex, Line, ToggleButton, Avatar, Text } from '@once-ui-system/core';
 import { ThemeToggle } from '@/components/common/ThemeToggle';
 import styles from './Navigation.module.scss';
 
@@ -19,11 +19,12 @@ export function Navigation() {
 
   return (
     <>
-      {/* Fade effect - top on desktop, bottom on mobile */}
-      <Fade className="s-flex-hide" fillWidth position="fixed" height="80" zIndex={9} />
-      <Fade className="s-flex-show" fillWidth position="fixed" bottom="0" to="top" height="80" zIndex={9} />
+      {/* Fade效果 - 桌面顶部渐隐 */}
+      <div className={`${styles.mask} s-flex-hide`} style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 80, zIndex: 8, pointerEvents: 'none' }} />
+      {/* Fade效果 - 移动端底部渐隐 */}
+      <div className={`${styles.mask} s-flex-show`} style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: 80, zIndex: 8, pointerEvents: 'none', transform: 'rotate(180deg)' }} />
 
-      {/* Main Navigation */}
+      {/* 主导航栏 */}
       <Flex
         fitHeight
         position="unset"
@@ -35,7 +36,7 @@ export function Navigation() {
         horizontal="center"
         data-border="rounded"
       >
-        {/* Left section - Logo on desktop */}
+        {/* 左侧 - Logo (仅桌面显示) */}
         <Flex paddingLeft="12" fillWidth vertical="center" textVariant="body-default-s">
           <Flex className="s-flex-hide" gap="8" vertical="center">
             <img
@@ -49,7 +50,7 @@ export function Navigation() {
           </Flex>
         </Flex>
 
-        {/* Center - Navigation */}
+        {/* 中央 - 导航按钮组 */}
         <Flex fillWidth horizontal="center">
           <Flex
             background="surface"
@@ -62,7 +63,7 @@ export function Navigation() {
             className={styles.navContainer}
           >
             <Flex gap="4" vertical="center" textVariant="body-default-s">
-              {/* Home */}
+              {/* 首页 */}
               <ToggleButton
                 prefixIcon="home"
                 href="/"
@@ -71,7 +72,7 @@ export function Navigation() {
 
               <Line background="neutral-alpha-medium" vert maxHeight="24" />
 
-              {/* Search */}
+              {/* 搜索 - 桌面显示标签，移动端仅图标 */}
               <ToggleButton
                 className="s-flex-hide"
                 prefixIcon="search"
@@ -86,7 +87,7 @@ export function Navigation() {
                 selected={pathname === '/search'}
               />
 
-              {/* Dashboard - only for logged in users */}
+              {/* Dashboard - 仅登录用户 */}
               {user && (
                 <>
                   <ToggleButton
@@ -105,7 +106,7 @@ export function Navigation() {
                 </>
               )}
 
-              {/* Analytics - only for logged in users */}
+              {/* Analytics - 仅登录用户 */}
               {user && (
                 <>
                   <ToggleButton
@@ -141,13 +142,13 @@ export function Navigation() {
 
               <Line background="neutral-alpha-medium" vert maxHeight="24" />
 
-              {/* Theme Toggle */}
+              {/* 主题切换 */}
               <ThemeToggle />
             </Flex>
           </Flex>
         </Flex>
 
-        {/* Right section - User/Auth */}
+        {/* 右侧 - 用户信息 (仅桌面显示) */}
         <Flex fillWidth horizontal="end" vertical="center">
           <Flex
             paddingRight="12"
