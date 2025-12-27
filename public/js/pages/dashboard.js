@@ -1,12 +1,19 @@
 /**
  * Dashboard Page JavaScript
- * Manages user statistics, saved jobs, and search history
+ * Manages user statistics, saved jobs, search history, charts, and presets
  */
 
 const Dashboard = {
     stats: null,
     savedJobs: [],
     searchHistory: [],
+    presets: [],
+    trends: [],
+    statusDistribution: {},
+    charts: {},
+    currentFilter: 'all',
+    editingPresetId: null,
+    editingJobId: null,
 
     async init() {
         // Check authentication
@@ -34,11 +41,14 @@ const Dashboard = {
 
     async loadDashboardData() {
         try {
-            // Load stats, saved jobs, and search history in parallel
-            const [statsRes, savedJobsRes, historyRes] = await Promise.all([
+            // Load all data in parallel
+            const [statsRes, savedJobsRes, historyRes, presetsRes, trendsRes, statusRes] = await Promise.all([
                 this.fetchWithAuth('/api/user/stats'),
                 this.fetchWithAuth('/api/user/saved-jobs'),
-                this.fetchWithAuth('/api/user/search-history')
+                this.fetchWithAuth('/api/user/search-history'),
+                this.fetchWithAuth('/api/user/presets'),
+                this.fetchWithAuth('/api/user/trends?days=7'),
+                this.fetchWithAuth('/api/user/job-status-distribution')
             ]);
 
             if (statsRes.success) {
@@ -54,6 +64,21 @@ const Dashboard = {
             if (historyRes.success) {
                 this.searchHistory = historyRes.history || [];
                 this.renderSearchHistory();
+            }
+
+            if (presetsRes.success) {
+                this.presets = presetsRes.presets || [];
+                this.renderPresets();
+            }
+
+            if (trendsRes.success) {
+                this.trends = trendsRes.trends || [];
+                this.renderTrendsChart();
+            }
+
+            if (statusRes.success) {
+                this.statusDistribution = statusRes.distribution || {};
+                this.renderStatusChart();
             }
         } catch (error) {
             console.error('Failed to load dashboard data:', error);
@@ -79,17 +104,25 @@ const Dashboard = {
         const stats = this.stats || {
             totalSearches: 0,
             savedJobs: 0,
-            thisMonth: 0
+            appliedJobs: 0,
+            thisMonth: 0,
+            recentSaves: 0
         };
 
         this.animateValue('totalSearches', 0, stats.totalSearches || 0, 1000);
         this.animateValue('savedJobs', 0, stats.savedJobs || 0, 1000);
+        this.animateValue('appliedJobs', 0, stats.appliedJobs || 0, 1000);
         this.animateValue('thisMonth', 0, stats.thisMonth || 0, 1000);
 
         // Update trend text
-        const savedJobsTrend = document.querySelector('.stats-card-pink .stats-card-trend');
-        if (savedJobsTrend && stats.recentSaves !== undefined) {
-            savedJobsTrend.textContent = `+${stats.recentSaves} this week`;
+        const savesTrend = document.getElementById('savesTrend');
+        if (savesTrend && stats.recentSaves !== undefined) {
+            savesTrend.textContent = `+${stats.recentSaves} this week`;
+        }
+
+        const searchesTrend = document.getElementById('searchesTrend');
+        if (searchesTrend && stats.thisMonth !== undefined) {
+            searchesTrend.textContent = `${stats.thisMonth} this month`;
         }
     },
 
@@ -116,8 +149,117 @@ const Dashboard = {
         }, Math.max(stepTime, 10));
     },
 
+    // ==================== CHARTS ====================
+
+    renderTrendsChart() {
+        const ctx = document.getElementById('trendsChart');
+        if (!ctx || this.trends.length === 0) return;
+
+        // Destroy existing chart if any
+        if (this.charts.trends) {
+            this.charts.trends.destroy();
+        }
+
+        const labels = this.trends.map(t => {
+            const date = new Date(t.date);
+            return date.toLocaleDateString('en-US', { weekday: 'short' });
+        });
+
+        this.charts.trends = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: 'Searches',
+                        data: this.trends.map(t => t.searches),
+                        borderColor: '#0077B5',
+                        backgroundColor: 'rgba(0, 119, 181, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Saved Jobs',
+                        data: this.trends.map(t => t.savedJobs),
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    },
+
+    renderStatusChart() {
+        const ctx = document.getElementById('statusChart');
+        if (!ctx) return;
+
+        // Destroy existing chart if any
+        if (this.charts.status) {
+            this.charts.status.destroy();
+        }
+
+        const labels = ['Saved', 'Applied', 'Interviewing', 'Offered', 'Rejected'];
+        const data = [
+            this.statusDistribution.saved || 0,
+            this.statusDistribution.applied || 0,
+            this.statusDistribution.interviewing || 0,
+            this.statusDistribution.offered || 0,
+            this.statusDistribution.rejected || 0
+        ];
+
+        // Check if there's any data
+        const hasData = data.some(d => d > 0);
+
+        this.charts.status = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels,
+                datasets: [{
+                    data: hasData ? data : [1],
+                    backgroundColor: hasData ? [
+                        '#fbbf24', // Saved - yellow
+                        '#3b82f6', // Applied - blue
+                        '#8b5cf6', // Interviewing - purple
+                        '#10b981', // Offered - green
+                        '#ef4444'  // Rejected - red
+                    ] : ['#e5e5e5']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    },
+
+    // ==================== SEARCH HISTORY ====================
+
     renderSearchHistory() {
-        const container = document.querySelector('.timeline');
+        const container = document.getElementById('searchHistoryTimeline');
         if (!container) return;
 
         if (this.searchHistory.length === 0) {
@@ -141,7 +283,7 @@ const Dashboard = {
                         ${search.resultsCount || 0} results found
                     </p>
                     <div class="timeline-actions">
-                        <button class="btn-timeline-primary" onclick="Dashboard.repeatSearch('${this.escapeHTML(JSON.stringify(search.searchParams))}')">
+                        <button class="btn-timeline-primary" onclick="Dashboard.repeatSearch('${encodeURIComponent(JSON.stringify(search.searchParams || {}))}')">
                             Search Again
                         </button>
                     </div>
@@ -150,39 +292,46 @@ const Dashboard = {
         `).join('');
     },
 
+    // ==================== SAVED JOBS ====================
+
     renderSavedJobs() {
-        const container = document.querySelector('.jobs-grid');
+        const container = document.getElementById('savedJobsGrid');
         if (!container) return;
 
-        if (this.savedJobs.length === 0) {
+        // Filter jobs based on current filter
+        let filteredJobs = this.savedJobs;
+        if (this.currentFilter !== 'all') {
+            filteredJobs = this.savedJobs.filter(job =>
+                (job.status || 'saved') === this.currentFilter
+            );
+        }
+
+        if (filteredJobs.length === 0) {
             container.innerHTML = `
                 <div class="col-span-full text-center py-8 text-stone-500">
-                    <p>No saved jobs yet.</p>
+                    <p>${this.currentFilter === 'all' ? 'No saved jobs yet.' : `No ${this.currentFilter} jobs.`}</p>
                     <a href="/search.html" class="text-blue-600 hover:underline mt-2 inline-block">Search for jobs to save</a>
                 </div>
             `;
             return;
         }
 
-        container.innerHTML = this.savedJobs.slice(0, 6).map(job => `
+        container.innerHTML = filteredJobs.slice(0, 9).map(job => `
             <div class="job-card feature-card" data-job-id="${job.id}">
-                <div class="job-company-logo">${this.getCompanyEmoji(job.company)}</div>
+                <div class="flex justify-between items-start mb-2">
+                    <div class="job-company-logo">${this.getCompanyEmoji(job.company)}</div>
+                    <span class="status-badge status-${job.status || 'saved'}">${this.getStatusLabel(job.status || 'saved')}</span>
+                </div>
                 <h3 class="job-title">${this.escapeHTML(job.position)}</h3>
                 <p class="job-company">${this.escapeHTML(job.company)}</p>
                 <div class="job-meta">
                     <span class="job-meta-item">${this.escapeHTML(job.location || 'Location not specified')}</span>
                     ${job.salary ? `<span class="job-meta-item">${this.escapeHTML(job.salary)}</span>` : ''}
                 </div>
-                ${job.status ? `
-                    <div class="job-status mt-2">
-                        <span class="px-2 py-1 text-xs rounded-full ${this.getStatusClass(job.status)}">
-                            ${this.getStatusLabel(job.status)}
-                        </span>
-                    </div>
-                ` : ''}
-                <div class="job-actions">
-                    <a href="${job.jobUrl}" target="_blank" class="btn-job-primary">View Details</a>
-                    <button class="btn-job-secondary" onclick="Dashboard.removeJob('${job.id}')">Remove</button>
+                <div class="job-actions mt-3">
+                    <a href="${job.jobUrl}" target="_blank" class="btn-job-primary">View</a>
+                    <button class="btn-job-secondary" onclick="Dashboard.openStatusModal('${job.id}')">Update</button>
+                    <button class="btn-job-secondary text-red-600" onclick="Dashboard.removeJob('${job.id}')">Remove</button>
                 </div>
             </div>
         `).join('');
@@ -198,20 +347,9 @@ const Dashboard = {
         return company ? company.charAt(0).toUpperCase() : '?';
     },
 
-    getStatusClass(status) {
-        const classes = {
-            'pending': 'bg-yellow-100 text-yellow-800',
-            'applied': 'bg-blue-100 text-blue-800',
-            'interviewing': 'bg-purple-100 text-purple-800',
-            'offered': 'bg-green-100 text-green-800',
-            'rejected': 'bg-red-100 text-red-800'
-        };
-        return classes[status] || 'bg-stone-100 text-stone-800';
-    },
-
     getStatusLabel(status) {
         const labels = {
-            'pending': 'Saved',
+            'saved': 'Saved',
             'applied': 'Applied',
             'interviewing': 'Interviewing',
             'offered': 'Offered',
@@ -219,6 +357,241 @@ const Dashboard = {
         };
         return labels[status] || status;
     },
+
+    // ==================== STATUS MODAL ====================
+
+    openStatusModal(jobId) {
+        const job = this.savedJobs.find(j => j.id === jobId);
+        if (!job) return;
+
+        this.editingJobId = jobId;
+        document.getElementById('statusModalJobTitle').textContent = `${job.position} at ${job.company}`;
+        document.getElementById('statusSelect').value = job.status || 'saved';
+        document.getElementById('statusNotes').value = job.notes || '';
+        document.getElementById('statusModal').classList.add('active');
+    },
+
+    closeStatusModal() {
+        this.editingJobId = null;
+        document.getElementById('statusModal').classList.remove('active');
+    },
+
+    async saveJobStatus() {
+        if (!this.editingJobId) return;
+
+        const status = document.getElementById('statusSelect').value;
+        const notes = document.getElementById('statusNotes').value;
+
+        try {
+            const response = await this.fetchWithAuth(`/api/user/saved-jobs/${this.editingJobId}`, {
+                method: 'PUT',
+                body: JSON.stringify({ status, notes })
+            });
+
+            if (response.success) {
+                // Update local data
+                const job = this.savedJobs.find(j => j.id === this.editingJobId);
+                if (job) {
+                    job.status = status;
+                    job.notes = notes;
+                }
+
+                this.closeStatusModal();
+                this.renderSavedJobs();
+
+                // Refresh charts
+                const statusRes = await this.fetchWithAuth('/api/user/job-status-distribution');
+                if (statusRes.success) {
+                    this.statusDistribution = statusRes.distribution;
+                    this.renderStatusChart();
+                }
+            }
+        } catch (error) {
+            console.error('Failed to update job status:', error);
+            alert('Failed to update status. Please try again.');
+        }
+    },
+
+    async removeJob(jobId) {
+        if (!confirm('Remove this job from your saved list?')) return;
+
+        try {
+            const response = await this.fetchWithAuth(`/api/user/saved-jobs/${jobId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.success) {
+                this.savedJobs = this.savedJobs.filter(j => j.id !== jobId);
+                this.renderSavedJobs();
+
+                // Refresh charts
+                const statusRes = await this.fetchWithAuth('/api/user/job-status-distribution');
+                if (statusRes.success) {
+                    this.statusDistribution = statusRes.distribution;
+                    this.renderStatusChart();
+                }
+            }
+        } catch (error) {
+            console.error('Failed to remove job:', error);
+            alert('Failed to remove job. Please try again.');
+        }
+    },
+
+    // ==================== PRESETS ====================
+
+    renderPresets() {
+        const container = document.getElementById('presetsGrid');
+        if (!container) return;
+
+        if (this.presets.length === 0) {
+            container.innerHTML = `
+                <div class="col-span-full text-center py-8 text-stone-500">
+                    <p>No search presets yet.</p>
+                    <button onclick="Dashboard.openPresetModal()" class="text-blue-600 hover:underline mt-2 inline-block">Create your first preset</button>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = this.presets.map(preset => `
+            <div class="preset-card ${preset.isDefault ? 'border-blue-500' : ''}">
+                <div class="flex items-center gap-2">
+                    <span class="preset-name">${this.escapeHTML(preset.name)}</span>
+                    ${preset.isDefault ? '<span class="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">Default</span>' : ''}
+                </div>
+                <p class="preset-params">
+                    ${preset.keyword ? this.escapeHTML(preset.keyword) : 'Any keyword'}
+                    ${preset.location ? ` in ${this.escapeHTML(preset.location)}` : ''}
+                    ${preset.remoteFilter ? ` (${preset.remoteFilter})` : ''}
+                </p>
+                <div class="preset-actions">
+                    <button class="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700" onclick="Dashboard.applyPreset('${preset.id}')">
+                        Use
+                    </button>
+                    <button class="px-3 py-1.5 border border-stone-300 text-sm rounded-lg hover:bg-stone-100" onclick="Dashboard.editPreset('${preset.id}')">
+                        Edit
+                    </button>
+                    <button class="px-3 py-1.5 text-red-600 text-sm rounded-lg hover:bg-red-50" onclick="Dashboard.deletePreset('${preset.id}')">
+                        Delete
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    },
+
+    openPresetModal(presetId = null) {
+        this.editingPresetId = presetId;
+        const modal = document.getElementById('presetModal');
+        const title = document.getElementById('presetModalTitle');
+
+        if (presetId) {
+            const preset = this.presets.find(p => p.id === presetId);
+            if (preset) {
+                title.textContent = 'Edit Preset';
+                document.getElementById('presetName').value = preset.name || '';
+                document.getElementById('presetKeyword').value = preset.keyword || '';
+                document.getElementById('presetLocation').value = preset.location || '';
+                document.getElementById('presetJobType').value = preset.jobType || '';
+                document.getElementById('presetRemoteFilter').value = preset.remoteFilter || '';
+                document.getElementById('presetIsDefault').checked = preset.isDefault || false;
+            }
+        } else {
+            title.textContent = 'Create Preset';
+            document.getElementById('presetName').value = '';
+            document.getElementById('presetKeyword').value = '';
+            document.getElementById('presetLocation').value = '';
+            document.getElementById('presetJobType').value = '';
+            document.getElementById('presetRemoteFilter').value = '';
+            document.getElementById('presetIsDefault').checked = false;
+        }
+
+        modal.classList.add('active');
+    },
+
+    closePresetModal() {
+        this.editingPresetId = null;
+        document.getElementById('presetModal').classList.remove('active');
+    },
+
+    editPreset(presetId) {
+        this.openPresetModal(presetId);
+    },
+
+    async savePreset() {
+        const presetData = {
+            name: document.getElementById('presetName').value,
+            keyword: document.getElementById('presetKeyword').value,
+            location: document.getElementById('presetLocation').value,
+            jobType: document.getElementById('presetJobType').value,
+            remoteFilter: document.getElementById('presetRemoteFilter').value,
+            isDefault: document.getElementById('presetIsDefault').checked
+        };
+
+        if (!presetData.name) {
+            alert('Please enter a preset name.');
+            return;
+        }
+
+        try {
+            const url = this.editingPresetId
+                ? `/api/user/presets/${this.editingPresetId}`
+                : '/api/user/presets';
+            const method = this.editingPresetId ? 'PUT' : 'POST';
+
+            const response = await this.fetchWithAuth(url, {
+                method,
+                body: JSON.stringify(presetData)
+            });
+
+            if (response.success) {
+                this.closePresetModal();
+                // Reload presets
+                const presetsRes = await this.fetchWithAuth('/api/user/presets');
+                if (presetsRes.success) {
+                    this.presets = presetsRes.presets || [];
+                    this.renderPresets();
+                }
+            }
+        } catch (error) {
+            console.error('Failed to save preset:', error);
+            alert('Failed to save preset. Please try again.');
+        }
+    },
+
+    async deletePreset(presetId) {
+        if (!confirm('Delete this preset?')) return;
+
+        try {
+            const response = await this.fetchWithAuth(`/api/user/presets/${presetId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.success) {
+                this.presets = this.presets.filter(p => p.id !== presetId);
+                this.renderPresets();
+            }
+        } catch (error) {
+            console.error('Failed to delete preset:', error);
+            alert('Failed to delete preset. Please try again.');
+        }
+    },
+
+    applyPreset(presetId) {
+        const preset = this.presets.find(p => p.id === presetId);
+        if (!preset) return;
+
+        const params = new URLSearchParams();
+        if (preset.keyword) params.set('keyword', preset.keyword);
+        if (preset.location) params.set('location', preset.location);
+        if (preset.jobType) params.set('jobType', preset.jobType);
+        if (preset.remoteFilter) params.set('remoteFilter', preset.remoteFilter);
+        if (preset.experienceLevel) params.set('experienceLevel', preset.experienceLevel);
+        if (preset.salary) params.set('salary', preset.salary);
+
+        window.location.href = `/search.html?${params.toString()}`;
+    },
+
+    // ==================== UTILITIES ====================
 
     formatTimeAgo(dateString) {
         const date = new Date(dateString);
@@ -242,33 +615,6 @@ const Dashboard = {
         return div.innerHTML;
     },
 
-    async removeJob(jobId) {
-        if (!confirm('Remove this job from your saved list?')) return;
-
-        try {
-            const response = await this.fetchWithAuth(`/api/user/saved-jobs/${jobId}`, {
-                method: 'DELETE'
-            });
-
-            if (response.success) {
-                const card = document.querySelector(`[data-job-id="${jobId}"]`);
-                if (card) {
-                    card.style.opacity = '0.5';
-                    setTimeout(() => {
-                        card.remove();
-                        this.savedJobs = this.savedJobs.filter(j => j.id !== jobId);
-                        if (this.savedJobs.length === 0) {
-                            this.renderSavedJobs();
-                        }
-                    }, 300);
-                }
-            }
-        } catch (error) {
-            console.error('Failed to remove job:', error);
-            alert('Failed to remove job. Please try again.');
-        }
-    },
-
     repeatSearch(searchParamsJson) {
         try {
             const params = JSON.parse(decodeURIComponent(searchParamsJson));
@@ -285,6 +631,32 @@ const Dashboard = {
         if (exportBtn) {
             exportBtn.addEventListener('click', () => this.exportSavedJobs());
         }
+
+        // Create preset button
+        const createPresetBtn = document.getElementById('createPresetBtn');
+        if (createPresetBtn) {
+            createPresetBtn.addEventListener('click', () => this.openPresetModal());
+        }
+
+        // Status filter tabs
+        const statusTabs = document.querySelectorAll('.status-tab');
+        statusTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                statusTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                this.currentFilter = tab.dataset.status;
+                this.renderSavedJobs();
+            });
+        });
+
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
     },
 
     async exportSavedJobs() {
@@ -294,7 +666,7 @@ const Dashboard = {
         }
 
         try {
-            const response = await fetch('/api/export/saved-jobs', {
+            const response = await fetch('/api/export/saved-jobs/excel', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

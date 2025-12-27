@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stackServerApp } from '@/lib/stack';
 import { db, savedJobs, users } from '@/lib/db';
-import { eq, desc, and } from 'drizzle-orm';
+import { eq, desc, and, sql } from 'drizzle-orm';
 
 /**
  * GET /api/user/saved-jobs
@@ -126,6 +126,73 @@ export async function POST(request: NextRequest) {
     console.error('Save job error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to save job' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * PUT /api/user/saved-jobs
+ * Update a saved job's status or notes
+ */
+export async function PUT(request: NextRequest) {
+  try {
+    const user = await stackServerApp.getUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+    const { id, status, notes } = body;
+
+    if (!id) {
+      return NextResponse.json(
+        { success: false, error: 'Job ID is required' },
+        { status: 400 }
+      );
+    }
+
+    const updateData: Record<string, unknown> = {
+      updatedAt: new Date(),
+    };
+
+    if (status) {
+      updateData.status = status;
+      if (status === 'applied') {
+        updateData.appliedAt = new Date();
+      }
+    }
+
+    if (notes !== undefined) {
+      updateData.notes = notes;
+    }
+
+    const [updatedJob] = await db
+      .update(savedJobs)
+      .set(updateData)
+      .where(and(eq(savedJobs.id, id), eq(savedJobs.userId, user.id)))
+      .returning();
+
+    if (!updatedJob) {
+      return NextResponse.json(
+        { success: false, error: 'Job not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Job updated successfully',
+      job: updatedJob,
+    });
+  } catch (error) {
+    console.error('Update saved job error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to update job' },
       { status: 500 }
     );
   }

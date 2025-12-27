@@ -34,4 +34,8 @@ router.delete('/presets/:id', userController.deletePreset);
 // Stats
 router.get('/stats', userController.getUserStats);
 
+// Trends
+router.get('/trends', userController.getUserTrends);
+router.get('/job-status-distribution', userController.getJobStatusDistribution);
+
 module.exports = router;

@@ -1,15 +1,36 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useUser } from '@stackframe/stack';
+import { useSearchParams } from 'next/navigation';
 import { LINKEDIN_HOSTS } from '@/lib/linkedin/api';
 import type { Job } from '@/lib/linkedin/api';
 
-export default function SearchPage() {
+type SearchPreset = {
+  id: string;
+  name: string;
+  keyword: string | null;
+  location: string | null;
+  country: string | null;
+  jobType: string | null;
+  experienceLevel: string | null;
+  salary: string | null;
+  remoteFilter: string | null;
+  dateSincePosted: string | null;
+};
+
+function SearchContent() {
   const user = useUser();
+  const searchParamsHook = useSearchParams();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [presets, setPresets] = useState<SearchPreset[]>([]);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [presetName, setPresetName] = useState('');
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [savedJobIds, setSavedJobIds] = useState<Set<string>>(new Set());
+
   const [searchParams, setSearchParams] = useState({
     keyword: '',
     location: '',
@@ -21,6 +42,63 @@ export default function SearchPage() {
     dateSincePosted: '',
     limit: '20',
   });
+
+  // Load URL params and presets on mount
+  useEffect(() => {
+    // Apply URL params
+    const keyword = searchParamsHook.get('keyword');
+    const location = searchParamsHook.get('location');
+    const country = searchParamsHook.get('country');
+    const jobType = searchParamsHook.get('jobType');
+    const experienceLevel = searchParamsHook.get('experienceLevel');
+
+    if (keyword || location || country || jobType || experienceLevel) {
+      setSearchParams(prev => ({
+        ...prev,
+        keyword: keyword || prev.keyword,
+        location: location || prev.location,
+        country: country || prev.country,
+        jobType: jobType || prev.jobType,
+        experienceLevel: experienceLevel || prev.experienceLevel,
+      }));
+    }
+
+    // Load presets if logged in
+    if (user) {
+      loadPresets();
+      loadSavedJobIds();
+    }
+  }, [searchParamsHook, user]);
+
+  const loadPresets = async () => {
+    try {
+      const response = await fetch('/api/user/presets');
+      const data = await response.json();
+      if (data.success) {
+        setPresets(data.presets || []);
+      }
+    } catch (error) {
+      console.error('Failed to load presets:', error);
+    }
+  };
+
+  const loadSavedJobIds = async () => {
+    try {
+      const response = await fetch('/api/user/saved-jobs');
+      const data = await response.json();
+      if (data.success && data.jobs) {
+        const ids = new Set(data.jobs.map((j: { jobId: string }) => j.jobId));
+        setSavedJobIds(ids);
+      }
+    } catch (error) {
+      console.error('Failed to load saved jobs:', error);
+    }
+  };
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,6 +142,16 @@ export default function SearchPage() {
       return;
     }
 
+    // Extract job ID from URL
+    const jobId = job.jobUrl?.match(/(\d+)/)?.[1];
+    if (!jobId) return;
+
+    // Check if already saved
+    if (savedJobIds.has(jobId)) {
+      showToast('Job already saved', 'error');
+      return;
+    }
+
     try {
       const response = await fetch('/api/user/saved-jobs', {
         method: 'POST',
@@ -73,16 +161,73 @@ export default function SearchPage() {
 
       const data = await response.json();
       if (data.success) {
-        alert('Job saved!');
+        setSavedJobIds(prev => new Set([...prev, jobId]));
+        showToast('Job saved!', 'success');
       }
     } catch (err) {
       console.error('Failed to save job:', err);
+      showToast('Failed to save job', 'error');
+    }
+  };
+
+  const applyPreset = (preset: SearchPreset) => {
+    setSearchParams({
+      keyword: preset.keyword || '',
+      location: preset.location || '',
+      country: preset.country || 'us',
+      jobType: preset.jobType || '',
+      experienceLevel: preset.experienceLevel || '',
+      salary: preset.salary || '',
+      remoteFilter: preset.remoteFilter || '',
+      dateSincePosted: preset.dateSincePosted || '',
+      limit: '20',
+    });
+    showToast(`Preset "${preset.name}" applied`, 'success');
+  };
+
+  const saveAsPreset = async () => {
+    if (!presetName.trim()) {
+      showToast('Please enter a preset name', 'error');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/user/presets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: presetName,
+          ...searchParams,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setPresets(prev => [...prev, data.preset]);
+        setShowSaveModal(false);
+        setPresetName('');
+        showToast('Preset saved!', 'success');
+      } else {
+        showToast(data.error || 'Failed to save preset', 'error');
+      }
+    } catch (error) {
+      console.error('Save preset error:', error);
+      showToast('Failed to save preset', 'error');
     }
   };
 
   return (
     <div className="min-h-screen bg-stone-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Toast Notification */}
+        {toast && (
+          <div className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transition-all ${
+            toast.type === 'success' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'
+          }`}>
+            {toast.message}
+          </div>
+        )}
+
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-stone-900 mb-2">Search Jobs</h1>
           <p className="text-stone-600">Find your next opportunity from LinkedIn</p>
@@ -92,7 +237,40 @@ export default function SearchPage() {
           {/* Search Filters */}
           <div className="lg:col-span-1">
             <form onSubmit={handleSearch} className="card p-6 sticky top-24">
-              <h2 className="text-lg font-semibold text-stone-900 mb-4">Filters</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-stone-900">Filters</h2>
+                {user && (
+                  <button
+                    type="button"
+                    onClick={() => setShowSaveModal(true)}
+                    className="text-sm text-brand-primary hover:underline"
+                  >
+                    Save Preset
+                  </button>
+                )}
+              </div>
+
+              {/* Preset Selector */}
+              {user && presets.length > 0 && (
+                <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+                  <label className="block text-sm font-medium text-brand-primary mb-2">Quick Presets</label>
+                  <div className="flex flex-wrap gap-2">
+                    {presets.slice(0, 3).map(preset => (
+                      <button
+                        key={preset.id}
+                        type="button"
+                        onClick={() => applyPreset(preset)}
+                        className="px-3 py-1 text-xs bg-white border border-brand-primary text-brand-primary rounded-full hover:bg-brand-primary hover:text-white transition-colors"
+                      >
+                        {preset.name}
+                      </button>
+                    ))}
+                    {presets.length > 3 && (
+                      <span className="text-xs text-brand-primary px-2 py-1">+{presets.length - 3} more</span>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Keyword */}
               <div className="mb-4">
@@ -240,9 +418,19 @@ export default function SearchPage() {
             ) : jobs.length > 0 ? (
               <div className="space-y-4">
                 <p className="text-sm text-stone-500">{jobs.length} jobs found</p>
-                {jobs.map((job, index) => (
-                  <JobCard key={index} job={job} onSave={() => handleSaveJob(job)} />
-                ))}
+                {jobs.map((job, index) => {
+                  const jobId = job.jobUrl?.match(/(\d+)/)?.[1];
+                  const isSaved = jobId ? savedJobIds.has(jobId) : false;
+
+                  return (
+                    <JobCard
+                      key={index}
+                      job={job}
+                      onSave={() => handleSaveJob(job)}
+                      isSaved={isSaved}
+                    />
+                  );
+                })}
               </div>
             ) : (
               <div className="card p-12 text-center">
@@ -255,12 +443,51 @@ export default function SearchPage() {
             )}
           </div>
         </div>
+
+        {/* Save Preset Modal */}
+        {showSaveModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setShowSaveModal(false)}>
+            <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
+              <h2 className="text-xl font-semibold text-stone-900 mb-4">Save as Preset</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-stone-700 mb-1">Preset Name</label>
+                  <input
+                    type="text"
+                    value={presetName}
+                    onChange={(e) => setPresetName(e.target.value)}
+                    placeholder="e.g., Remote Frontend Jobs"
+                    className="w-full px-3 py-2 border border-stone-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                  />
+                </div>
+                <div className="text-sm text-stone-500 p-3 bg-stone-50 rounded-lg">
+                  <p className="font-medium mb-1">Current filters:</p>
+                  <ul className="space-y-1">
+                    {searchParams.keyword && <li>Keyword: {searchParams.keyword}</li>}
+                    {searchParams.location && <li>Location: {searchParams.location}</li>}
+                    {searchParams.jobType && <li>Type: {searchParams.jobType}</li>}
+                    {searchParams.experienceLevel && <li>Level: {searchParams.experienceLevel}</li>}
+                    {searchParams.remoteFilter && <li>Work: {searchParams.remoteFilter}</li>}
+                  </ul>
+                </div>
+                <div className="flex gap-3 justify-end">
+                  <button onClick={() => setShowSaveModal(false)} className="btn btn-secondary">
+                    Cancel
+                  </button>
+                  <button onClick={saveAsPreset} className="btn btn-primary">
+                    Save Preset
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-function JobCard({ job, onSave }: { job: Job; onSave: () => void }) {
+function JobCard({ job, onSave, isSaved }: { job: Job; onSave: () => void; isSaved: boolean }) {
   return (
     <div className="card p-6 card-hover">
       <div className="flex gap-4">
@@ -283,10 +510,15 @@ function JobCard({ job, onSave }: { job: Job; onSave: () => void }) {
             </div>
             <button
               onClick={onSave}
-              className="p-2 text-stone-400 hover:text-brand-primary hover:bg-blue-50 rounded-lg transition-colors"
-              title="Save job"
+              disabled={isSaved}
+              className={`p-2 rounded-lg transition-colors ${
+                isSaved
+                  ? 'bg-brand-primary text-white'
+                  : 'text-stone-400 hover:text-brand-primary hover:bg-blue-50'
+              }`}
+              title={isSaved ? 'Saved' : 'Save job'}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill={isSaved ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
               </svg>
             </button>
@@ -322,5 +554,17 @@ function JobCard({ job, onSave }: { job: Job; onSave: () => void }) {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+      </div>
+    }>
+      <SearchContent />
+    </Suspense>
   );
 }

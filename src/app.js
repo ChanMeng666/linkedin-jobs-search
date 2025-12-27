@@ -7,7 +7,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { corsOptions, limiter } = require('./config');
-const { jobsRoutes, geoRoutes, healthRoutes, authRoutes, oauthRoutes, userRoutes, exportRoutes, analyticsRoutes } = require('./routes');
+const { jobsRoutes, geoRoutes, healthRoutes, authRoutes, oauthRoutes, userRoutes, exportRoutes, analyticsRoutes, cacheRoutes } = require('./routes');
 const { geoMonitoring, errorHandler, notFoundHandler, securityMiddleware, additionalSecurityHeaders } = require('./middleware');
 const logger = require('./utils/logger');
 
@@ -84,6 +84,7 @@ app.use('/api/oauth', oauthRoutes);         // OAuth flow (server-side)
 app.use('/api/user', userRoutes);           // User data (protected)
 app.use('/api/export', exportRoutes);       // Data export
 app.use('/api/analytics', analyticsRoutes); // Market analytics
+app.use('/api/cache', cacheRoutes);         // Cache management
 
 // 404 Handler
 app.use(notFoundHandler);

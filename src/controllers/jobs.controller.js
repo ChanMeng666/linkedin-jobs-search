@@ -4,6 +4,7 @@
  */
 
 const linkedInService = require('../services/linkedin.service');
+const dbService = require('../services/db.service');
 const geoMonitoring = require('../middleware/geoMonitoring');
 const { asyncHandler } = require('../middleware/errorHandler');
 const { validateQuery } = require('../utils/queryBuilder');
@@ -44,6 +45,21 @@ const searchJobs = asyncHandler(async (req, res) => {
     // Log performance
     const duration = Date.now() - startTime;
     logger.logAPICall('LinkedInService', 'searchJobs', duration, result.success);
+
+    // Auto-save search history for authenticated users
+    if (result.success && req.user && req.user.id) {
+        try {
+            await dbService.addSearchHistory(
+                req.user.id,
+                req.body,
+                result.count || result.jobs?.length || 0
+            );
+            logger.debug('Search history saved', { userId: req.user.id });
+        } catch (error) {
+            // Don't fail the request if history save fails
+            logger.warn('Failed to save search history', { error: error.message });
+        }
+    }
 
     res.json(result);
 });

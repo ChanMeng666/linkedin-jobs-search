@@ -173,6 +173,19 @@ const getUserStats = asyncHandler(async (req, res) => {
     res.json({ success: true, stats });
 });
 
+// ==================== TRENDS ====================
+
+const getUserTrends = asyncHandler(async (req, res) => {
+    const { days = 7 } = req.query;
+    const trends = await dbService.getSearchTrends(req.user.id, parseInt(days));
+    res.json({ success: true, trends });
+});
+
+const getJobStatusDistribution = asyncHandler(async (req, res) => {
+    const distribution = await dbService.getJobStatusDistribution(req.user.id);
+    res.json({ success: true, distribution });
+});
+
 module.exports = {
     getCurrentUser,
     updateProfile,
@@ -186,5 +199,7 @@ module.exports = {
     createPreset,
     updatePreset,
     deletePreset,
-    getUserStats
+    getUserStats,
+    getUserTrends,
+    getJobStatusDistribution
 };

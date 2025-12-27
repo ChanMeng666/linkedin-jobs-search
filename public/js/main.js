@@ -144,6 +144,7 @@ const App = {
     currentPage: 0,
     searchParams: {},
     lastSearchResults: [],
+    presets: [],
 
     // Initialize application
     init() {
@@ -154,6 +155,8 @@ const App = {
         this.setupMobileToggle();
         this.setCurrentYear();
         this.setupExportButtons();
+        this.initPresets();
+        this.applyURLParams();
     },
 
     // Setup event listeners
@@ -611,6 +614,194 @@ const App = {
         yearElements.forEach(el => {
             if (el) el.textContent = currentYear;
         });
+    },
+
+    // ===== PRESET FUNCTIONALITY =====
+
+    // Initialize presets
+    async initPresets() {
+        // Check if user is authenticated
+        if (typeof Auth === 'undefined' || !Auth.isAuthenticated()) {
+            return;
+        }
+
+        // Show preset selector
+        const presetSelector = document.getElementById('presetSelector');
+        if (presetSelector) {
+            presetSelector.style.display = 'block';
+        }
+
+        // Load presets
+        await this.loadPresets();
+
+        // Setup event listeners
+        const presetSelect = document.getElementById('searchPreset');
+        if (presetSelect) {
+            presetSelect.addEventListener('change', (e) => this.applyPreset(e.target.value));
+        }
+
+        const savePresetBtn = document.getElementById('saveAsPresetBtn');
+        if (savePresetBtn) {
+            savePresetBtn.addEventListener('click', () => this.openSavePresetModal());
+        }
+    },
+
+    // Load presets from API
+    async loadPresets() {
+        try {
+            const response = await fetch('/api/user/presets', {
+                headers: Auth.getAuthHeaders()
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                this.presets = data.presets || [];
+                this.renderPresetOptions();
+            }
+        } catch (error) {
+            console.error('Failed to load presets:', error);
+        }
+    },
+
+    // Render preset options in select
+    renderPresetOptions() {
+        const select = document.getElementById('searchPreset');
+        if (!select) return;
+
+        select.innerHTML = '<option value="">-- Select a preset --</option>';
+
+        this.presets.forEach(preset => {
+            const option = document.createElement('option');
+            option.value = preset.id;
+            option.textContent = preset.name + (preset.isDefault ? ' (Default)' : '');
+            select.appendChild(option);
+        });
+    },
+
+    // Apply a preset to the form
+    applyPreset(presetId) {
+        if (!presetId) return;
+
+        const preset = this.presets.find(p => p.id === presetId);
+        if (!preset) return;
+
+        // Apply preset values to form fields
+        const fields = ['keyword', 'location', 'jobType', 'remoteFilter', 'experienceLevel', 'salary', 'dateSincePosted', 'sortBy', 'country'];
+
+        fields.forEach(field => {
+            const input = document.getElementById(field);
+            if (input && preset[field]) {
+                input.value = preset[field];
+            }
+        });
+
+        Toast.success(`Applied preset: ${preset.name}`);
+    },
+
+    // Open save preset modal
+    openSavePresetModal() {
+        const modal = document.getElementById('savePresetModal');
+        if (modal) {
+            modal.classList.add('active');
+        }
+    },
+
+    // Close save preset modal
+    closeSavePresetModal() {
+        const modal = document.getElementById('savePresetModal');
+        if (modal) {
+            modal.classList.remove('active');
+            document.getElementById('newPresetName').value = '';
+            document.getElementById('newPresetDefault').checked = false;
+        }
+    },
+
+    // Save current search as preset
+    async saveCurrentAsPreset() {
+        const name = document.getElementById('newPresetName').value.trim();
+        if (!name) {
+            Toast.error('Please enter a preset name.');
+            return;
+        }
+
+        // Gather current form values
+        const form = document.getElementById('searchForm');
+        const formData = new FormData(form);
+        const presetData = {
+            name,
+            isDefault: document.getElementById('newPresetDefault').checked
+        };
+
+        // Add form values
+        for (const [key, value] of formData.entries()) {
+            if (value && key !== 'page') {
+                presetData[key] = value;
+            }
+        }
+
+        try {
+            const response = await fetch('/api/user/presets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...Auth.getAuthHeaders()
+                },
+                body: JSON.stringify(presetData)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                Toast.success('Preset saved successfully!');
+                this.closeSavePresetModal();
+                await this.loadPresets();
+            } else {
+                Toast.error(data.error || 'Failed to save preset.');
+            }
+        } catch (error) {
+            console.error('Failed to save preset:', error);
+            Toast.error('Failed to save preset. Please try again.');
+        }
+    },
+
+    // Apply URL parameters to form (for preset application from dashboard)
+    applyURLParams() {
+        const params = new URLSearchParams(window.location.search);
+        const fields = ['keyword', 'location', 'jobType', 'remoteFilter', 'experienceLevel', 'salary', 'dateSincePosted', 'sortBy', 'country'];
+
+        let hasParams = false;
+        fields.forEach(field => {
+            const value = params.get(field);
+            if (value) {
+                const input = document.getElementById(field);
+                if (input) {
+                    input.value = value;
+                    hasParams = true;
+                }
+            }
+        });
+
+        // Auto-submit if params were applied
+        if (hasParams) {
+            const form = document.getElementById('searchForm');
+            if (form) {
+                setTimeout(() => form.dispatchEvent(new Event('submit')), 100);
+            }
+        }
+    },
+
+    // Quick search from empty state suggestions
+    quickSearch(keyword, location) {
+        const keywordInput = document.getElementById('keyword');
+        const locationInput = document.getElementById('location');
+
+        if (keywordInput) keywordInput.value = keyword;
+        if (locationInput) locationInput.value = location;
+
+        const form = document.getElementById('searchForm');
+        if (form) {
+            form.dispatchEvent(new Event('submit'));
+        }
     }
 };
 

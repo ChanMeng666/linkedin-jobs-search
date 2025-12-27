@@ -5,7 +5,7 @@
 
 const { db } = require('../db');
 const { users, savedJobs, searchHistory, searchPresets } = require('../db/schema');
-const { eq, desc, and, sql } = require('drizzle-orm');
+const { eq, desc, and, sql, gte, between } = require('drizzle-orm');
 const logger = require('../utils/logger');
 
 class DbService {
@@ -286,17 +286,49 @@ class DbService {
     // ==================== STATS OPERATIONS ====================
 
     async getUserStats(userId) {
+        // Date calculations
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+        // Total saved jobs
         const [savedCount] = await db.select({ count: sql`count(*)` })
             .from(savedJobs)
             .where(eq(savedJobs.userId, userId));
 
+        // Total search history
         const [historyCount] = await db.select({ count: sql`count(*)` })
             .from(searchHistory)
             .where(eq(searchHistory.userId, userId));
 
+        // Total presets
         const [presetsCount] = await db.select({ count: sql`count(*)` })
             .from(searchPresets)
             .where(eq(searchPresets.userId, userId));
+
+        // This month's searches
+        const [thisMonthCount] = await db.select({ count: sql`count(*)` })
+            .from(searchHistory)
+            .where(and(
+                eq(searchHistory.userId, userId),
+                gte(searchHistory.createdAt, startOfMonth)
+            ));
+
+        // Recent saves (last 7 days)
+        const [recentSavesCount] = await db.select({ count: sql`count(*)` })
+            .from(savedJobs)
+            .where(and(
+                eq(savedJobs.userId, userId),
+                gte(savedJobs.createdAt, sevenDaysAgo)
+            ));
+
+        // Applied jobs count
+        const [appliedCount] = await db.select({ count: sql`count(*)` })
+            .from(savedJobs)
+            .where(and(
+                eq(savedJobs.userId, userId),
+                eq(savedJobs.status, 'applied')
+            ));
 
         // Status breakdown
         const statusCounts = await db.select({
@@ -308,14 +340,95 @@ class DbService {
             .groupBy(savedJobs.status);
 
         return {
-            savedJobsCount: parseInt(savedCount?.count || 0),
-            searchHistoryCount: parseInt(historyCount?.count || 0),
+            totalSearches: parseInt(historyCount?.count || 0),
+            savedJobs: parseInt(savedCount?.count || 0),
+            appliedJobs: parseInt(appliedCount?.count || 0),
+            thisMonth: parseInt(thisMonthCount?.count || 0),
+            recentSaves: parseInt(recentSavesCount?.count || 0),
             presetsCount: parseInt(presetsCount?.count || 0),
             statusBreakdown: statusCounts.reduce((acc, item) => {
                 acc[item.status || 'saved'] = parseInt(item.count);
                 return acc;
             }, {})
         };
+    }
+
+    // ==================== TRENDS OPERATIONS ====================
+
+    /**
+     * Get search trends for the last N days
+     */
+    async getSearchTrends(userId, days = 7) {
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - days);
+
+        // Get daily search counts
+        const dailySearches = await db.select({
+            date: sql`DATE(${searchHistory.createdAt})`,
+            count: sql`count(*)`
+        })
+            .from(searchHistory)
+            .where(and(
+                eq(searchHistory.userId, userId),
+                gte(searchHistory.createdAt, startDate)
+            ))
+            .groupBy(sql`DATE(${searchHistory.createdAt})`)
+            .orderBy(sql`DATE(${searchHistory.createdAt})`);
+
+        // Get daily saved jobs
+        const dailySaves = await db.select({
+            date: sql`DATE(${savedJobs.createdAt})`,
+            count: sql`count(*)`
+        })
+            .from(savedJobs)
+            .where(and(
+                eq(savedJobs.userId, userId),
+                gte(savedJobs.createdAt, startDate)
+            ))
+            .groupBy(sql`DATE(${savedJobs.createdAt})`)
+            .orderBy(sql`DATE(${savedJobs.createdAt})`);
+
+        // Fill in missing dates with 0
+        const trends = [];
+        for (let i = days - 1; i >= 0; i--) {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            const dateStr = date.toISOString().split('T')[0];
+
+            const searchItem = dailySearches.find(d => d.date === dateStr);
+            const saveItem = dailySaves.find(d => d.date === dateStr);
+
+            trends.push({
+                date: dateStr,
+                searches: parseInt(searchItem?.count || 0),
+                savedJobs: parseInt(saveItem?.count || 0)
+            });
+        }
+
+        return trends;
+    }
+
+    /**
+     * Get job status distribution
+     */
+    async getJobStatusDistribution(userId) {
+        const statusCounts = await db.select({
+            status: savedJobs.status,
+            count: sql`count(*)`
+        })
+            .from(savedJobs)
+            .where(eq(savedJobs.userId, userId))
+            .groupBy(savedJobs.status);
+
+        const statuses = ['saved', 'applied', 'interviewing', 'offered', 'rejected'];
+        const distribution = {};
+
+        statuses.forEach(status => {
+            const item = statusCounts.find(s => s.status === status);
+            distribution[status] = parseInt(item?.count || 0);
+        });
+
+        return distribution;
     }
 }
 
