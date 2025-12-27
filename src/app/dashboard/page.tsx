@@ -292,7 +292,7 @@ export default function DashboardPage() {
 
       {/* Header */}
       <RevealFx translateY="4">
-        <Flex fillWidth horizontal="space-between" vertical="center" gap="24" mobileDirection="column">
+        <Flex fillWidth horizontal="between" vertical="center" gap="24" mobileDirection="column">
           <Column gap="8">
             <Heading variant="display-strong-m">
               Welcome back, {user.displayName || user.primaryEmail?.split('@')[0] || 'User'}!
@@ -418,7 +418,7 @@ export default function DashboardPage() {
                             />
                           )}
                           <Column flex={1} gap="8" style={{ minWidth: 0 }}>
-                            <Flex horizontal="space-between" vertical="start" gap="16" mobileDirection="column">
+                            <Flex horizontal="between" vertical="start" gap="16" mobileDirection="column">
                               <Column gap="4">
                                 <a
                                   href={job.jobUrl}
@@ -518,7 +518,7 @@ export default function DashboardPage() {
               {/* Search History Tab */}
               {activeTab === 'history' && (
                 <Column gap="16" fillWidth>
-                  <Flex horizontal="space-between" vertical="center">
+                  <Flex horizontal="between" vertical="center">
                     <Text variant="body-default-s" onBackground="neutral-weak">
                       {searchHistory.length} recent searches
                     </Text>
@@ -591,7 +591,7 @@ export default function DashboardPage() {
               {/* Search Presets Tab */}
               {activeTab === 'presets' && (
                 <Column gap="16" fillWidth>
-                  <Flex horizontal="space-between" vertical="center">
+                  <Flex horizontal="between" vertical="center">
                     <Text variant="body-default-s" onBackground="neutral-weak">
                       {presets.length} saved presets
                     </Text>
@@ -618,7 +618,7 @@ export default function DashboardPage() {
                             WebkitBackdropFilter: 'blur(12px)',
                           }}
                         >
-                          <Flex horizontal="space-between" vertical="start">
+                          <Flex horizontal="between" vertical="start">
                             <Text variant="heading-strong-m" onBackground="neutral-strong">
                               {preset.name}
                             </Text>
@@ -932,7 +932,7 @@ function Modal({
           WebkitBackdropFilter: 'blur(24px)',
         }}
       >
-        <Flex horizontal="space-between" vertical="center">
+        <Flex horizontal="between" vertical="center">
           <Heading variant="heading-strong-l">{title}</Heading>
           <button
             onClick={onClose}

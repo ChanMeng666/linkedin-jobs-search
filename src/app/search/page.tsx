@@ -293,7 +293,7 @@ function SearchContent() {
           style={{ top: 100, height: 'fit-content', backdropFilter: 'blur(12px)' }}
           className="glass-card"
         >
-          <Flex horizontal="space-between" vertical="center">
+          <Flex horizontal="between" vertical="center">
             <Heading variant="heading-strong-m">Filters</Heading>
             {user && (
               <Button variant="tertiary" size="s" onClick={() => setShowSaveModal(true)}>
@@ -577,7 +577,7 @@ function JobCard({ job, onSave, isSaved }: { job: Job; onSave: () => void; isSav
       )}
 
       <Column flex={1} gap="8" style={{ minWidth: 0 }}>
-        <Flex horizontal="space-between" gap="16">
+        <Flex horizontal="between" gap="16">
           <Column gap="4">
             <a
               href={job.jobUrl}

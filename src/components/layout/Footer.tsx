@@ -146,7 +146,7 @@ export function Footer() {
         <Line background="neutral-alpha-weak" />
 
         {/* Bottom Section */}
-        <Flex horizontal="space-between" vertical="center" mobileDirection="column" gap="16">
+        <Flex horizontal="between" vertical="center" mobileDirection="column" gap="16">
           <Flex gap="16" vertical="center" wrap>
             <Text variant="body-default-s" onSolid="neutral-medium">
               © {currentYear} JobSearch. All rights reserved.
