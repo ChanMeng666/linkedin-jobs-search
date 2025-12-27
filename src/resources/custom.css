@@ -1,0 +1,164 @@
+/* LinkedIn Jobs Search - Custom CSS Variables */
+/* LinkedIn Brand Color: #0A66C2 */
+
+:root {
+  /* LinkedIn Blue Brand Colors */
+  --scheme-brand-100: #001d33;
+  --scheme-brand-200: #003366;
+  --scheme-brand-300: #004d99;
+  --scheme-brand-400: #0A66C2;  /* LinkedIn Primary */
+  --scheme-brand-500: #0A66C2;
+  --scheme-brand-600: #1a7ad4;
+  --scheme-brand-700: #4a9de6;
+  --scheme-brand-800: #7abbf0;
+  --scheme-brand-900: #a8d4f7;
+  --scheme-brand-1000: #d4eafc;
+  --scheme-brand-1100: #e8f4fc;
+  --scheme-brand-1200: #f5faff;
+
+  /* Brand alpha variants */
+  --scheme-brand-600-10: rgba(10, 102, 194, 0.1);
+  --scheme-brand-600-30: rgba(10, 102, 194, 0.3);
+  --scheme-brand-600-50: rgba(10, 102, 194, 0.5);
+
+  /* Cyan Accent Colors */
+  --scheme-accent-100: #002633;
+  --scheme-accent-200: #004d66;
+  --scheme-accent-300: #007399;
+  --scheme-accent-400: #0099cc;
+  --scheme-accent-500: #00b8e6;
+  --scheme-accent-600: #33c9f0;
+  --scheme-accent-700: #66daf5;
+  --scheme-accent-800: #99e9fa;
+  --scheme-accent-900: #ccf5fc;
+  --scheme-accent-1000: #e6faff;
+  --scheme-accent-1100: #f0fcff;
+  --scheme-accent-1200: #f7feff;
+  --scheme-accent-600-10: rgba(51, 201, 240, 0.1);
+  --scheme-accent-600-30: rgba(51, 201, 240, 0.3);
+  --scheme-accent-600-50: rgba(51, 201, 240, 0.5);
+}
+
+/* Glassmorphism Enhancement for Translucent Surface */
+[data-surface="translucent"] {
+  --surface-background: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme="dark"][data-surface="translucent"] {
+  --surface-background: rgba(17, 17, 17, 0.85);
+}
+
+/* Card Hover Effects */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 40px -12px rgba(10, 102, 194, 0.15),
+    0 8px 16px -8px rgba(0, 0, 0, 0.1);
+}
+
+/* Glass Card Effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+[data-theme="dark"] .glass-card {
+  background: rgba(30, 30, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 24px -8px rgba(10, 102, 194, 0.12),
+    0 4px 8px -4px rgba(0, 0, 0, 0.06);
+  border-color: rgba(10, 102, 194, 0.3);
+}
+
+/* Glow Button Effect */
+.glow-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-button::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, #0A66C2, #00A0DC);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  filter: blur(8px);
+  transition: opacity 0.3s ease;
+}
+
+.glow-button:hover::after {
+  opacity: 0.6;
+}
+
+/* Interactive Card */
+.card-interactive {
+  transition: all 0.25s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: var(--brand-alpha-medium);
+  box-shadow:
+    0 12px 24px -8px rgba(10, 102, 194, 0.12),
+    0 4px 8px -4px rgba(0, 0, 0, 0.06);
+}
+
+/* Fade In Up Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Staggered Animation Delays */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+
+/* LinkedIn Blue Focus Ring */
+*:focus-visible {
+  outline: 2px solid #0A66C2;
+  outline-offset: 2px;
+}
+
+/* Smooth Page Transitions */
+.page-transition {
+  opacity: 0;
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .glass-card:hover {
+    transform: none;
+  }
+
+  .hover-lift:hover {
+    transform: none;
+  }
+}
