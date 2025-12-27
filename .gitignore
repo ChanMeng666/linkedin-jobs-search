@@ -52,7 +52,6 @@ coverage/
 tmp/
 temp/
 .env*.local
-linkedin-jobs-api/
 .env.vercel.local
 /.next
 nul
