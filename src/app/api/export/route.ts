@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
         job.createdAt ? new Date(job.createdAt as string).toLocaleDateString() : '',
       ]);
 
-      const csvContent = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
+      const csvContent = [headers.join(','), ...rows.map((row: string[]) => row.join(','))].join('\n');
 
       return new NextResponse(csvContent, {
         status: 200,
