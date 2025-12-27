@@ -87,7 +87,7 @@ function SearchContent() {
       const response = await fetch('/api/user/saved-jobs');
       const data = await response.json();
       if (data.success && data.jobs) {
-        const ids = new Set(data.jobs.map((j: { jobId: string }) => j.jobId));
+        const ids = new Set<string>(data.jobs.map((j: { jobId: string }) => j.jobId));
         setSavedJobIds(ids);
       }
     } catch (error) {
