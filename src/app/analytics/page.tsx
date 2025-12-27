@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useUser } from '@stackframe/stack';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Flex } from '@once-ui-system/core';
+import { Spinner } from '@/components/common/Spinner';
 
 type SavedJob = {
   id: string;
@@ -183,9 +185,9 @@ export default function AnalyticsPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
-      </div>
+      <Flex fillWidth fillHeight horizontal="center" vertical="center" paddingY="104">
+        <Spinner size="l" />
+      </Flex>
     );
   }
 
@@ -201,9 +203,9 @@ export default function AnalyticsPage() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
-          </div>
+          <Flex horizontal="center" vertical="center" paddingY="80">
+            <Spinner size="l" />
+          </Flex>
         ) : !hasData ? (
           <div className="card p-12 text-center">
             <div className="w-20 h-20 rounded-2xl bg-brand-primary/10 flex items-center justify-center mx-auto mb-6">

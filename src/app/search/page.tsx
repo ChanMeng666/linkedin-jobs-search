@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { LINKEDIN_HOSTS } from '@/lib/linkedin/api';
 import type { Job } from '@/lib/linkedin/api';
 import { Column, Flex, Heading, Text, Button, Input, Select, Badge, Line, Avatar, RevealFx } from '@once-ui-system/core';
+import { Spinner } from '@/components/common/Spinner';
 
 type SearchPreset = {
   id: string;
@@ -245,7 +246,7 @@ function SearchContent() {
 
           {loading ? (
             <Flex horizontal="center" vertical="center" padding="80">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: 'var(--brand-solid-strong)' }} />
+              <Spinner size="l" />
             </Flex>
           ) : jobs.length > 0 ? (
             <Column gap="16">
@@ -649,7 +650,7 @@ export default function SearchPage() {
   return (
     <Suspense fallback={
       <Flex fillWidth horizontal="center" vertical="center" padding="80">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: 'var(--brand-solid-strong)' }} />
+        <Spinner size="l" />
       </Flex>
     }>
       <SearchContent />

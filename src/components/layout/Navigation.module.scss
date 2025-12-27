@@ -1,0 +1,17 @@
+.position {
+  position: sticky;
+  top: 0;
+}
+
+.navContainer {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@media (max-width: 768px) {
+  .position {
+    top: auto;
+    position: fixed;
+    bottom: var(--static-space-24, 24px);
+  }
+}

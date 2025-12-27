@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useUser } from '@stackframe/stack';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Column, Flex, Text, Heading, Button, Badge, Line, RevealFx } from '@once-ui-system/core';
+import { Column, Flex, Text, Heading, Button, Tag, Line, RevealFx } from '@once-ui-system/core';
+import { Spinner } from '@/components/common/Spinner';
 
 type SavedJob = {
   id: string;
@@ -264,7 +265,7 @@ export default function DashboardPage() {
   if (!user) {
     return (
       <Flex fillWidth fillHeight horizontal="center" vertical="center" paddingY="104">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+        <Spinner size="l" />
       </Flex>
     );
   }
@@ -345,15 +346,12 @@ export default function DashboardPage() {
                 size="m"
                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
               >
-                {tab.label}
-                <Badge
-                  background={activeTab === tab.id ? 'neutral-alpha-weak' : 'neutral-alpha-medium'}
-                  paddingX="8"
-                  paddingY="2"
-                  arrow={false}
-                >
-                  <Text variant="label-default-xs">{tab.count}</Text>
-                </Badge>
+                <Flex gap="8" vertical="center">
+                  <span>{tab.label}</span>
+                  <Tag size="s" variant={activeTab === tab.id ? 'neutral' : 'neutral'}>
+                    {tab.count}
+                  </Tag>
+                </Flex>
               </Button>
             ))}
           </Flex>
@@ -362,7 +360,7 @@ export default function DashboardPage() {
 
           {loading ? (
             <Flex fillWidth horizontal="center" paddingY="64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+              <Spinner size="l" />
             </Flex>
           ) : (
             <>

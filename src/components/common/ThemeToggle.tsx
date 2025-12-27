@@ -1,50 +1,34 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { IconButton } from '@once-ui-system/core';
+import React, { useEffect, useState } from 'react';
+import { ToggleButton, useTheme } from '@once-ui-system/core';
 
-export function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+export const ThemeToggle: React.FC = () => {
+  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState('light');
 
   useEffect(() => {
     setMounted(true);
-    const savedTheme = localStorage.getItem('data-theme');
-    if (savedTheme === 'dark' || savedTheme === 'light') {
-      setTheme(savedTheme);
-    } else {
-      // Check system preference
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(systemDark ? 'dark' : 'light');
-    }
+    setCurrentTheme(document.documentElement.getAttribute('data-theme') || 'light');
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    localStorage.setItem('data-theme', newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-  };
+  useEffect(() => {
+    setCurrentTheme(document.documentElement.getAttribute('data-theme') || 'light');
+  }, [theme]);
 
-  // Prevent hydration mismatch
   if (!mounted) {
-    return (
-      <IconButton
-        icon="sun"
-        variant="ghost"
-        size="m"
-        aria-label="Toggle theme"
-      />
-    );
+    return <ToggleButton prefixIcon="sun" aria-label="Toggle theme" />;
   }
 
+  const icon = currentTheme === 'dark' ? 'sun' : 'moon';
+  const nextTheme = currentTheme === 'light' ? 'dark' : 'light';
+
   return (
-    <IconButton
-      icon={theme === 'light' ? 'moon' : 'sun'}
-      variant="ghost"
-      size="m"
-      onClick={toggleTheme}
-      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+    <ToggleButton
+      prefixIcon={icon}
+      onClick={() => setTheme(nextTheme)}
+      aria-label={`Switch to ${nextTheme} mode`}
     />
   );
-}
+};

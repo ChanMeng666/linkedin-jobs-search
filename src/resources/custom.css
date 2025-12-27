@@ -162,3 +162,68 @@
     transform: none;
   }
 }
+
+/* Spinner Animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Fix Button with Badge alignment */
+button > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Fix Badge inside Button vertical centering */
+button [id="badge"],
+button .Badge_animation__e9OQ9 {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+/* Ensure text in buttons is vertically centered */
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tab button alignment fix */
+.tab-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Loading state - minimal footprint */
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Once UI Button fixes */
+[class*="Button_button"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+[class*="Button_button"] > div {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
