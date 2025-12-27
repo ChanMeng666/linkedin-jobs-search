@@ -171,11 +171,11 @@ export function Navigation() {
               </>
             ) : (
               <Flex gap="8" vertical="center">
-                <Avatar
-                  src={user.profileImageUrl || undefined}
-                  value={user.displayName?.[0] || user.primaryEmail?.[0] || 'U'}
-                  size="s"
-                />
+                {user.profileImageUrl ? (
+                  <Avatar src={user.profileImageUrl} size="s" />
+                ) : (
+                  <Avatar value={user.displayName?.[0] || user.primaryEmail?.[0] || 'U'} size="s" />
+                )}
                 <Text variant="body-default-s" onBackground="neutral-medium">
                   {user.displayName || user.primaryEmail?.split('@')[0]}
                 </Text>
