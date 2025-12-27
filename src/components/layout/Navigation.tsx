@@ -20,8 +20,8 @@ export function Navigation() {
   return (
     <>
       {/* Fade effect - top on desktop, bottom on mobile */}
-      <Fade hide="s" fillWidth position="fixed" height="80" zIndex={9} />
-      <Fade show="s" fillWidth position="fixed" bottom="0" to="top" height="80" zIndex={9} />
+      <Fade className="s-flex-hide" fillWidth position="fixed" height="80" zIndex={9} />
+      <Fade className="s-flex-show" fillWidth position="fixed" bottom="0" to="top" height="80" zIndex={9} />
 
       {/* Main Navigation */}
       <Flex
@@ -37,7 +37,7 @@ export function Navigation() {
       >
         {/* Left section - Logo on desktop */}
         <Flex paddingLeft="12" fillWidth vertical="center" textVariant="body-default-s">
-          <Flex hide="s" gap="8" vertical="center">
+          <Flex className="s-flex-hide" gap="8" vertical="center">
             <img
               src="/assets/images/linkedin-jobs-search-logo.svg"
               alt="JobSearch"
@@ -155,7 +155,7 @@ export function Navigation() {
             vertical="center"
             textVariant="body-default-s"
             gap="8"
-            hide="s"
+            className="s-flex-hide"
           >
             {!user ? (
               <>

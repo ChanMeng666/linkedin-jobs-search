@@ -194,7 +194,7 @@ export default function RootLayout({
               />
 
               {/* Spacer for fixed navigation */}
-              <Flex fillWidth minHeight="16" hide="s" />
+              <Flex fillWidth minHeight="16" className="s-flex-hide" />
 
               {/* Navigation */}
               <Suspense fallback={<NavigationSkeleton />}>
