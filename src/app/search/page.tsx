@@ -234,7 +234,7 @@ function SearchContent() {
         </Text>
       </Column>
 
-      <Flex gap="32" mobileDirection="column-reverse">
+      <Flex gap="32">
         {/* Results Section */}
         <Column flex={3} gap="16">
           {error && (

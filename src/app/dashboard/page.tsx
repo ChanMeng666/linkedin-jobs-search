@@ -292,7 +292,7 @@ export default function DashboardPage() {
 
       {/* Header */}
       <RevealFx translateY="4">
-        <Flex fillWidth horizontal="between" vertical="center" gap="24" mobileDirection="column">
+        <Flex fillWidth horizontal="between" vertical="center" gap="24">
           <Column gap="8">
             <Heading variant="display-strong-m">
               Welcome back, {user.displayName || user.primaryEmail?.split('@')[0] || 'User'}!
@@ -418,7 +418,7 @@ export default function DashboardPage() {
                             />
                           )}
                           <Column flex={1} gap="8" style={{ minWidth: 0 }}>
-                            <Flex horizontal="between" vertical="start" gap="16" mobileDirection="column">
+                            <Flex horizontal="between" vertical="start" gap="16">
                               <Column gap="4">
                                 <a
                                   href={job.jobUrl}
@@ -756,7 +756,7 @@ export default function DashboardPage() {
             <Text variant="body-default-m" onBackground="neutral-medium">
               Choose a format to export your {savedJobs.length} saved jobs:
             </Text>
-            <Flex gap="16" mobileDirection="column">
+            <Flex gap="16">
               <Flex
                 padding="20"
                 radius="l"

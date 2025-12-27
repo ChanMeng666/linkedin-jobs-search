@@ -15,7 +15,7 @@ export function Footer() {
     >
       <Column maxWidth="l" fillWidth gap="48">
         {/* Top Section */}
-        <Flex gap="48" mobileDirection="column" fillWidth>
+        <Flex gap="48" fillWidth>
           {/* Brand Column */}
           <Column flex={2} gap="16">
             <Flex gap="8" vertical="center">
@@ -146,7 +146,7 @@ export function Footer() {
         <Line background="neutral-alpha-weak" />
 
         {/* Bottom Section */}
-        <Flex horizontal="between" vertical="center" mobileDirection="column" gap="16">
+        <Flex horizontal="between" vertical="center" gap="16">
           <Flex gap="16" vertical="center" wrap>
             <Text variant="body-default-s" onSolid="neutral-medium">
               © {currentYear} JobSearch. All rights reserved.
