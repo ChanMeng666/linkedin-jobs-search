@@ -3,6 +3,142 @@
  * Core application logic and initialization
  */
 
+// ===== Toast Notification System =====
+const Toast = {
+    container: null,
+
+    // Initialize toast container
+    init() {
+        this.container = document.getElementById('toastContainer');
+        if (!this.container) {
+            this.container = document.createElement('div');
+            this.container.id = 'toastContainer';
+            this.container.className = 'toast-container';
+            document.body.appendChild(this.container);
+        }
+    },
+
+    // Show a toast notification
+    show(message, type = 'default', duration = 4000) {
+        if (!this.container) this.init();
+
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+
+        const icon = this.getIcon(type);
+        toast.innerHTML = `
+            ${icon}
+            <span class="toast-message">${message}</span>
+            <button class="toast-close" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+        `;
+
+        // Close button handler
+        toast.querySelector('.toast-close').addEventListener('click', () => {
+            this.dismiss(toast);
+        });
+
+        this.container.appendChild(toast);
+
+        // Auto-dismiss after duration
+        if (duration > 0) {
+            setTimeout(() => this.dismiss(toast), duration);
+        }
+
+        return toast;
+    },
+
+    // Dismiss a toast
+    dismiss(toast) {
+        if (!toast || !toast.parentElement) return;
+        toast.classList.add('toast-out');
+        setTimeout(() => toast.remove(), 300);
+    },
+
+    // Get icon based on type
+    getIcon(type) {
+        const icons = {
+            success: `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                <path d="M22 4L12 14.01l-3-3"/>
+            </svg>`,
+            error: `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M15 9l-6 6M9 9l6 6"/>
+            </svg>`,
+            default: `<svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 16v-4M12 8h.01"/>
+            </svg>`
+        };
+        return icons[type] || icons.default;
+    },
+
+    // Convenience methods
+    success(message, duration) {
+        return this.show(message, 'success', duration);
+    },
+
+    error(message, duration) {
+        return this.show(message, 'error', duration);
+    },
+
+    info(message, duration) {
+        return this.show(message, 'default', duration);
+    }
+};
+
+// ===== Skeleton Loading System =====
+const Skeleton = {
+    // Generate skeleton cards for job results
+    jobCards(count = 5) {
+        let html = '';
+        for (let i = 0; i < count; i++) {
+            html += `
+                <div class="job-card skeleton-loading">
+                    <div class="job-card-header">
+                        <div class="job-card-info">
+                            <div class="skeleton skeleton-text" style="width: 70%; height: 20px;"></div>
+                            <div class="skeleton skeleton-text-sm" style="width: 50%; height: 14px; margin-top: 8px;"></div>
+                        </div>
+                        <div class="skeleton skeleton-avatar"></div>
+                    </div>
+                    <div class="job-card-meta" style="margin-top: 16px;">
+                        <div class="skeleton skeleton-text-sm" style="width: 30%;"></div>
+                        <div class="skeleton skeleton-text-sm" style="width: 25%;"></div>
+                        <div class="skeleton skeleton-text-sm" style="width: 20%;"></div>
+                    </div>
+                    <div class="job-card-footer" style="margin-top: 16px;">
+                        <div class="skeleton skeleton-text-sm" style="width: 25%;"></div>
+                        <div class="skeleton" style="width: 100px; height: 36px; border-radius: 8px;"></div>
+                    </div>
+                </div>
+            `;
+        }
+        return html;
+    },
+
+    // Show skeleton in a container
+    show(containerId, type = 'jobCards', count = 5) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        if (type === 'jobCards') {
+            container.innerHTML = `
+                <div class="skeleton-container">
+                    <div class="skeleton skeleton-text" style="width: 180px; height: 24px; margin-bottom: 16px;"></div>
+                    <div class="space-y-4">
+                        ${this.jobCards(count)}
+                    </div>
+                </div>
+            `;
+        }
+    }
+};
+
 // Application state
 const App = {
     currentPage: 0,
@@ -11,6 +147,7 @@ const App = {
 
     // Initialize application
     init() {
+        Toast.init();
         this.setupEventListeners();
         this.setupTabs();
         this.setupPagination();
@@ -135,12 +272,8 @@ const App = {
 
         this.searchParams = data;
 
-        // Show loading
-        DOM.setHTML('results', `
-            <div class="text-center p-4">
-                <p class="text-gray-600">Searching...</p>
-            </div>
-        `);
+        // Show skeleton loading
+        Skeleton.show('results', 'jobCards', 5);
 
         try {
             const result = await API.searchJobs(data);
@@ -193,7 +326,7 @@ const App = {
     // Export search results
     async exportResults(format) {
         if (this.lastSearchResults.length === 0) {
-            alert('No search results to export. Please search first.');
+            Toast.error('No search results to export. Please search first.');
             return;
         }
 
@@ -219,7 +352,7 @@ const App = {
             a.remove();
         } catch (error) {
             console.error('Export error:', error);
-            alert('Failed to export. Please try again.');
+            Toast.error('Failed to export. Please try again.');
         }
     },
 
@@ -230,7 +363,7 @@ const App = {
             const canProceed = await AuthGuard.requireAuth('saveJob', () => this.performSaveJob(job));
             if (!canProceed) return;
         } else if (typeof Auth === 'undefined' || !Auth.isAuthenticated()) {
-            alert('Please sign in to save jobs.');
+            Toast.info('Please sign in to save jobs.');
             window.location.href = '/login.html';
             return;
         } else {
@@ -267,10 +400,11 @@ const App = {
                     btn.classList.add('saved');
                     btn.innerHTML = this.getSavedIcon();
                 }
+                Toast.success('Job saved to favorites!');
             }
         } catch (error) {
             console.error('Save job error:', error);
-            alert('Failed to save job. Please try again.');
+            Toast.error('Failed to save job. Please try again.');
         }
     },
 

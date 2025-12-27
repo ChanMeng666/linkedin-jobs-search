@@ -1,26 +1,27 @@
 /**
  * Design System Variables
- * Editorial/Magazine Style with Professional Blue Theme
- * Refined minimalism with intentional typography
+ * Modern Minimalist Style - Clean, Refined, Professional
+ * Simplified color palette with intentional whitespace
  */
 
 :root {
   /* ===== Typography ===== */
-  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: 'SF Mono', 'Monaco', 'Menlo', monospace;
 
-  /* Font sizes - Editorial scale */
+  /* Simplified Font Scale - 6 sizes */
   --text-xs: 0.75rem;      /* 12px */
   --text-sm: 0.875rem;     /* 14px */
   --text-base: 1rem;       /* 16px */
-  --text-lg: 1.125rem;     /* 18px */
-  --text-xl: 1.25rem;      /* 20px */
-  --text-2xl: 1.5rem;      /* 24px */
-  --text-3xl: 2rem;        /* 32px */
-  --text-4xl: 2.5rem;      /* 40px */
-  --text-5xl: 3.5rem;      /* 56px */
-  --text-6xl: 4.5rem;      /* 72px */
+  --text-lg: 1.25rem;      /* 20px */
+  --text-xl: 1.75rem;      /* 28px */
+  --text-2xl: 2.5rem;      /* 40px */
+
+  /* Legacy font sizes for compatibility */
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.5rem;
 
   /* Font weights */
   --font-normal: 400;
@@ -41,110 +42,133 @@
   --tracking-normal: 0;
   --tracking-wide: 0.02em;
 
-  /* ===== Primary Colors (LinkedIn Brand Blue) ===== */
-  --blue-50: #f0f7ff;
-  --blue-100: #e0f0ff;
-  --blue-200: #b8dcff;
-  --blue-300: #7ac2ff;
-  --blue-400: #3aa5f5;
-  --blue-500: #0A66C2;  /* LinkedIn Brand Blue */
-  --blue-600: #0857a1;
-  --blue-700: #064580;
-  --blue-800: #043260;
-  --blue-900: #022140;
+  /* ===== Simplified Color Palette ===== */
 
-  /* ===== Neutral Colors (Warm Stone) ===== */
-  --stone-50: #fafaf9;
-  --stone-100: #f5f5f4;
-  --stone-200: #e7e5e4;
-  --stone-300: #d6d3d1;
-  --stone-400: #a8a29e;
-  --stone-500: #78716c;
-  --stone-600: #57534e;
-  --stone-700: #44403c;
-  --stone-800: #292524;
-  --stone-900: #1c1917;
+  /* Primary - LinkedIn Blue (3 shades only) */
+  --primary: #0A66C2;
+  --primary-light: #e8f4fc;
+  --primary-dark: #004182;
 
-  /* ===== Accent Colors ===== */
-  --emerald-500: #10b981;
-  --emerald-600: #059669;
-  --amber-500: #f59e0b;
-  --amber-600: #d97706;
-  --rose-500: #f43f5e;
-  --rose-600: #e11d48;
+  /* Neutrals - 5 essential grays */
+  --neutral-50: #fafafa;   /* Background subtle */
+  --neutral-100: #f5f5f5;  /* Background alt */
+  --neutral-200: #e5e5e5;  /* Border */
+  --neutral-500: #737373;  /* Text muted */
+  --neutral-700: #404040;  /* Text secondary */
+  --neutral-900: #171717;  /* Text primary */
 
-  /* ===== Brand Pink Accent ===== */
-  --pink-50: #fff5fa;
-  --pink-100: #ffebf4;
-  --pink-200: #ffd6ea;
-  --pink-300: #FFA7D7;  /* Brand Pink */
-  --pink-400: #ff8cc7;
+  /* Semantic Colors */
+  --success: #059669;
+  --error: #dc2626;
 
-  /* ===== Semantic Colors ===== */
-  --color-primary: var(--blue-500);
-  --color-primary-hover: var(--blue-600);
-  --color-primary-active: var(--blue-700);
+  /* ===== Semantic Mappings ===== */
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-dark);
+  --color-primary-active: var(--primary-dark);
 
-  --color-success: var(--emerald-500);
-  --color-warning: var(--amber-500);
-  --color-error: var(--rose-500);
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-warning: #d97706;
 
-  --color-accent: var(--pink-300);
-  --color-accent-light: var(--pink-50);
-
-  --color-text-primary: var(--stone-800);
-  --color-text-secondary: var(--stone-600);
-  --color-text-muted: var(--stone-400);
+  --color-text-primary: var(--neutral-900);
+  --color-text-secondary: var(--neutral-700);
+  --color-text-muted: var(--neutral-500);
   --color-text-inverse: #ffffff;
 
   --color-bg-primary: #ffffff;
-  --color-bg-secondary: var(--stone-50);
-  --color-bg-tertiary: var(--stone-100);
+  --color-bg-secondary: var(--neutral-50);
+  --color-bg-tertiary: var(--neutral-100);
 
-  --color-border: var(--stone-200);
-  --color-border-light: var(--stone-100);
+  --color-border: var(--neutral-200);
+  --color-border-light: var(--neutral-100);
 
-  /* ===== Gradients (Elegant) ===== */
-  --gradient-hero: linear-gradient(135deg, #f0f7ff 0%, #ffffff 50%, #e0f0ff 100%);
-  --gradient-cta: linear-gradient(135deg, #0A66C2 0%, #0857a1 100%);
-  --gradient-cta-hover: linear-gradient(135deg, #0857a1 0%, #064580 100%);
-  --gradient-card-hover: linear-gradient(180deg, rgba(10, 102, 194, 0.02) 0%, transparent 100%);
-  --gradient-divider: linear-gradient(90deg, transparent 0%, #e7e5e4 50%, transparent 100%);
-  --gradient-section: linear-gradient(180deg, #fafaf9 0%, #ffffff 100%);
+  /* ===== Legacy Color Compatibility ===== */
+  --blue-50: var(--primary-light);
+  --blue-100: var(--primary-light);
+  --blue-200: #bfdbfe;
+  --blue-300: #93c5fd;
+  --blue-400: #60a5fa;
+  --blue-500: var(--primary);
+  --blue-600: var(--primary-dark);
+  --blue-700: var(--primary-dark);
+  --blue-800: #1e3a5f;
+  --blue-900: #1e3a5f;
 
-  /* ===== Shadows (Refined) ===== */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.06);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+  --stone-50: var(--neutral-50);
+  --stone-100: var(--neutral-100);
+  --stone-200: var(--neutral-200);
+  --stone-300: #d4d4d4;
+  --stone-400: var(--neutral-500);
+  --stone-500: var(--neutral-500);
+  --stone-600: var(--neutral-700);
+  --stone-700: var(--neutral-700);
+  --stone-800: var(--neutral-900);
+  --stone-900: var(--neutral-900);
+
+  --emerald-500: var(--success);
+  --emerald-600: var(--success);
+  --rose-500: var(--error);
+  --rose-600: var(--error);
+  --amber-500: #f59e0b;
+  --amber-600: #d97706;
+
+  /* Remove pink accent - use blue instead */
+  --pink-50: var(--primary-light);
+  --pink-100: var(--primary-light);
+  --pink-200: var(--primary-light);
+  --pink-300: var(--primary);
+  --pink-400: var(--primary);
+  --color-accent: var(--primary);
+  --color-accent-light: var(--primary-light);
+
+  /* ===== Simplified Shadows (2 levels) ===== */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03),
+               0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07),
+               0 2px 4px -2px rgba(0, 0, 0, 0.05);
+
+  /* Legacy shadows */
+  --shadow-xs: var(--shadow-sm);
+  --shadow-lg: var(--shadow-md);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08),
+               0 8px 10px -6px rgba(0, 0, 0, 0.04);
 
   /* Focus ring */
   --shadow-focus: 0 0 0 3px rgba(10, 102, 194, 0.15);
-  --shadow-focus-error: 0 0 0 3px rgba(244, 63, 94, 0.15);
+  --shadow-focus-error: 0 0 0 3px rgba(220, 38, 38, 0.15);
 
-  /* ===== Spacing ===== */
+  /* ===== Standardized Spacing (6 levels) ===== */
+  --space-xs: 0.5rem;      /* 8px */
+  --space-sm: 1rem;        /* 16px */
+  --space-md: 1.5rem;      /* 24px */
+  --space-lg: 2.5rem;      /* 40px */
+  --space-xl: 4rem;        /* 64px */
+  --space-2xl: 6rem;       /* 96px */
+
+  /* Legacy spacing compatibility */
   --spacing-0: 0;
-  --spacing-1: 0.25rem;    /* 4px */
-  --spacing-2: 0.5rem;     /* 8px */
-  --spacing-3: 0.75rem;    /* 12px */
-  --spacing-4: 1rem;       /* 16px */
-  --spacing-5: 1.25rem;    /* 20px */
-  --spacing-6: 1.5rem;     /* 24px */
-  --spacing-8: 2rem;       /* 32px */
-  --spacing-10: 2.5rem;    /* 40px */
-  --spacing-12: 3rem;      /* 48px */
-  --spacing-16: 4rem;      /* 64px */
-  --spacing-20: 5rem;      /* 80px */
-  --spacing-24: 6rem;      /* 96px */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
 
-  /* ===== Border Radius ===== */
-  --radius-sm: 0.25rem;    /* 4px */
-  --radius-md: 0.5rem;     /* 8px */
-  --radius-lg: 0.75rem;    /* 12px */
-  --radius-xl: 1rem;       /* 16px */
-  --radius-2xl: 1.5rem;    /* 24px */
+  /* ===== Simplified Border Radius (3 levels) ===== */
+  --radius-sm: 0.5rem;     /* 8px */
+  --radius-md: 0.75rem;    /* 12px */
+  --radius-lg: 1rem;       /* 16px */
   --radius-full: 9999px;
+
+  /* Legacy radius */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
 
   /* ===== Transitions ===== */
   --transition-fast: 150ms;
@@ -161,34 +185,49 @@
   --z-modal-backdrop: 40;
   --z-modal: 50;
   --z-tooltip: 60;
+  --z-toast: 100;
 
   /* ===== Layout ===== */
   --container-max: 1280px;
   --container-narrow: 800px;
-  --header-height: 72px;
+  --header-height: 64px;
 
   /* ===== Legacy Compatibility Variables ===== */
-  --primary-blue: var(--blue-500);
-  --primary-blue-dark: var(--blue-600);
-  --cyan-glow: var(--blue-400);
-  --pink-beam: var(--pink-300);
+  --primary-blue: var(--primary);
+  --primary-blue-dark: var(--primary-dark);
+  --cyan-glow: var(--primary);
+  --pink-beam: var(--primary);
   --yellow-beam: var(--amber-500);
   --white: #ffffff;
+  --font-serif: var(--font-sans);
 
-  /* Slate fallbacks (map to stone for consistency) */
-  --slate-100: var(--stone-100);
-  --slate-200: var(--stone-200);
-  --slate-300: var(--stone-300);
-  --slate-500: var(--stone-500);
-  --slate-600: var(--stone-600);
-  --slate-700: var(--stone-700);
-  --slate-800: var(--stone-800);
-  --slate-900: var(--stone-900);
+  --slate-100: var(--neutral-100);
+  --slate-200: var(--neutral-200);
+  --slate-300: var(--neutral-200);
+  --slate-500: var(--neutral-500);
+  --slate-600: var(--neutral-700);
+  --slate-700: var(--neutral-700);
+  --slate-800: var(--neutral-900);
+  --slate-900: var(--neutral-900);
+
+  /* Gradients - Simplified */
+  --gradient-hero: linear-gradient(180deg, var(--neutral-50) 0%, #ffffff 100%);
+  --gradient-cta: var(--primary);
+  --gradient-cta-hover: var(--primary-dark);
+  --gradient-card-hover: transparent;
+  --gradient-divider: var(--neutral-200);
+  --gradient-section: linear-gradient(180deg, var(--neutral-50) 0%, #ffffff 100%);
 }
 
-/* Base styles */
-* {
+/* ===== Base Styles ===== */
+*, *::before, *::after {
   box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
@@ -197,19 +236,37 @@ body {
   line-height: var(--leading-normal);
   color: var(--color-text-primary);
   background-color: var(--color-bg-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Headings use serif font */
-h1, h2, h3 {
-  font-family: var(--font-serif);
+/* Headings - Now use sans-serif for cleaner look */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
+  font-weight: var(--font-semibold);
 }
 
 /* Selection styling */
 ::selection {
-  background-color: var(--blue-100);
-  color: var(--blue-900);
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
