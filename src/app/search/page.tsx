@@ -161,7 +161,7 @@ function SearchContent() {
 
       const data = await response.json();
       if (data.success) {
-        setSavedJobIds(prev => new Set([...prev, jobId]));
+        setSavedJobIds(prev => new Set([...Array.from(prev), jobId]));
         showToast('Job saved!', 'success');
       }
     } catch (err) {
